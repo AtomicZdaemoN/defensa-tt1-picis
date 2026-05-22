@@ -1,0 +1,2567 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Defensa TT1 · PICIS · 2026-B182</title>
+
+    <!-- Tipografías editoriales (Fontshare es mejor que Google Fonts, pero usamos Google porque IBM Plex está ahí) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    />
+
+    <style>
+      /* ===========================================
+         CSS CUSTOM PROPERTIES (THEME)
+         Cambiar aquí cambia todo el deck.
+         =========================================== */
+      :root {
+        /* Paleta canónica del proyecto */
+        --ink-1: #0b2545; /* navy más oscuro — títulos */
+        --ink-2: #13315c; /* navy 700 */
+        --ink-3: #1b4079; /* navy 500 */
+        --ink-body: #1f2937; /* texto cuerpo */
+        --ink-soft: #475569; /* secundario */
+        --ink-mute: #64748b; /* muted */
+
+        --paper-1: #faf8f3; /* papel cremoso de fondo */
+        --paper-2: #f3eee6; /* papel sombreado */
+        --paper-3: #e8e1d3; /* papel borde */
+
+        --accent: #c97b22; /* ámbar 500 — acento único */
+        --accent-soft: #e6a65b; /* ámbar 300 */
+        --accent-tint: rgba(201, 123, 34, 0.08);
+
+        --rule: #d8cfbf; /* divisor cálido */
+        --rule-soft: #ece5d5;
+
+        /* Tipografía */
+        --font-display:
+          "Fraunces", "Times New Roman", Georgia, ui-serif, serif;
+        --font-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+        /* Escala fluida — usa clamp() siempre */
+        --title-size: clamp(2.4rem, 4.6vw, 4.2rem);
+        --h2-size: clamp(1.4rem, 2.4vw, 2.1rem);
+        --h3-size: clamp(1rem, 1.4vw, 1.25rem);
+        --body-size: clamp(0.95rem, 1.05vw, 1.15rem);
+        --small-size: clamp(0.78rem, 0.9vw, 0.92rem);
+        --tiny-size: clamp(0.68rem, 0.78vw, 0.82rem);
+
+        /* Espaciado */
+        --slide-padding: clamp(2.2rem, 4.5vw, 5rem);
+        --content-gap: clamp(1.1rem, 1.8vw, 2.2rem);
+        --element-gap: clamp(0.55rem, 0.9vw, 1.1rem);
+
+        /* Motion */
+        --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+        --duration: 0.62s;
+      }
+
+      /* ===========================================
+         VIEWPORT BASE — los slides ocupan 100vh exacto
+         (copia de viewport-base.css de la skill)
+         =========================================== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow-x: hidden;
+      }
+      html {
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        font-family: var(--font-body);
+        color: var(--ink-body);
+        background: var(--paper-1);
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: var(--body-size);
+        line-height: 1.5;
+      }
+
+      /* Cada .slide es exactamente un viewport */
+      .slide {
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        scroll-snap-align: start;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: var(--slide-padding);
+        background: var(--paper-1);
+      }
+
+      /* Grano sutil de papel — pseudo elemento global */
+      .slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+            circle at 1px 1px,
+            rgba(11, 37, 69, 0.035) 1px,
+            transparent 0
+          );
+        background-size: 28px 28px;
+        background-position: 0 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.7;
+      }
+
+      .slide > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Header común con número de slide + marca */
+      .slide-frame {
+        position: absolute;
+        inset: 0;
+        padding: clamp(1rem, 2vw, 1.6rem) var(--slide-padding);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+        letter-spacing: 0.04em;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .slide-frame .brand strong {
+        color: var(--ink-1);
+        font-weight: 500;
+      }
+      .slide-frame .count {
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Footer fijo con la institución */
+      .slide-foot {
+        position: absolute;
+        left: var(--slide-padding);
+        right: var(--slide-padding);
+        bottom: clamp(1rem, 2vw, 1.6rem);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+        letter-spacing: 0.04em;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .slide-foot .inst {
+        text-transform: uppercase;
+      }
+
+      /* ===========================================
+         REVEAL ANIMATIONS — disparo por .visible en .slide
+         =========================================== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity var(--duration) var(--ease-out-expo),
+          transform var(--duration) var(--ease-out-expo);
+      }
+      .slide.visible .reveal {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Stagger automático para hasta 12 hijos */
+      .slide.visible .reveal:nth-child(1) { transition-delay: 60ms; }
+      .slide.visible .reveal:nth-child(2) { transition-delay: 140ms; }
+      .slide.visible .reveal:nth-child(3) { transition-delay: 220ms; }
+      .slide.visible .reveal:nth-child(4) { transition-delay: 300ms; }
+      .slide.visible .reveal:nth-child(5) { transition-delay: 380ms; }
+      .slide.visible .reveal:nth-child(6) { transition-delay: 460ms; }
+      .slide.visible .reveal:nth-child(7) { transition-delay: 540ms; }
+      .slide.visible .reveal:nth-child(8) { transition-delay: 620ms; }
+      .slide.visible .reveal:nth-child(9) { transition-delay: 700ms; }
+      .slide.visible .reveal:nth-child(10) { transition-delay: 780ms; }
+      .slide.visible .reveal:nth-child(11) { transition-delay: 860ms; }
+      .slide.visible .reveal:nth-child(12) { transition-delay: 940ms; }
+
+      /* Keyword acento por slide — color ámbar sin subrayado para no
+         chocar con la línea ámbar bajo el título (slide-rule). El énfasis
+         viene del color + peso. La transición de color se dispara al
+         entrar al slide. */
+      .accent-word {
+        position: relative;
+        color: var(--ink-1);
+        font-weight: 600;
+        white-space: nowrap;
+        transition: color 720ms var(--ease-out-expo) 720ms;
+      }
+      .slide.visible .accent-word {
+        color: var(--accent);
+      }
+
+      /* ===========================================
+         TYPOGRAPHY
+         =========================================== */
+      .eyebrow {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        font-weight: 500;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        margin-bottom: clamp(0.6rem, 1vw, 1rem);
+      }
+      h1.slide-title,
+      h2.slide-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: var(--title-size);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        color: var(--ink-1);
+        font-variation-settings: "opsz" 144, "SOFT" 30;
+      }
+      h2.slide-title {
+        font-size: clamp(2rem, 3.4vw, 3.2rem);
+      }
+      .slide-subtitle {
+        font-family: var(--font-body);
+        font-size: clamp(1.05rem, 1.3vw, 1.35rem);
+        font-weight: 400;
+        color: var(--ink-soft);
+        line-height: 1.45;
+        max-width: 64ch;
+        margin-top: clamp(0.6rem, 1vw, 1rem);
+      }
+      .slide-rule {
+        width: clamp(3rem, 4vw, 4.5rem);
+        height: 3px;
+        background: var(--accent);
+        margin: clamp(1rem, 1.6vw, 1.4rem) 0;
+        transform-origin: left center;
+        transform: scaleX(0);
+        transition: transform 540ms var(--ease-out-expo) 320ms;
+      }
+      .slide.visible .slide-rule {
+        transform: scaleX(1);
+      }
+
+      p.lead {
+        font-size: clamp(1rem, 1.2vw, 1.25rem);
+        line-height: 1.55;
+        color: var(--ink-body);
+        max-width: 64ch;
+      }
+      strong {
+        color: var(--ink-1);
+        font-weight: 600;
+      }
+      code,
+      .mono {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+      }
+      .ref {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+      }
+
+      /* ===========================================
+         LAYOUT HELPERS
+         =========================================== */
+      .slide-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 1320px;
+        width: 100%;
+        margin: 0 auto;
+        padding: clamp(2.5rem, 4vw, 4rem) 0 clamp(2.5rem, 4vw, 4rem);
+        position: relative;
+        z-index: 1;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(1.4rem, 2.4vw, 2.6rem);
+        align-items: start;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(1rem, 1.6vw, 1.5rem);
+      }
+
+      /* ===========================================
+         SLIDE 01 — PORTADA
+         =========================================== */
+      .cover {
+        background: var(--paper-1);
+        padding: 0;
+      }
+      .cover::before {
+        opacity: 0.5;
+      }
+      .cover-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 5fr 4fr;
+        gap: 0;
+        position: relative;
+        z-index: 1;
+      }
+      .cover-left {
+        padding: clamp(2.4rem, 4vw, 4rem) clamp(2.4rem, 4vw, 4.5rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-right: 1px solid var(--rule);
+      }
+      .cover-logos {
+        display: flex;
+        align-items: center;
+        gap: clamp(1.4rem, 2vw, 2rem);
+      }
+      .cover-logos img {
+        height: clamp(2.6rem, 3.2vw, 3.4rem);
+        width: auto;
+      }
+      .cover-eyebrow {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ink-mute);
+        margin-top: 0.3rem;
+        line-height: 1.4;
+      }
+      .cover-title {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(2.2rem, 3.4vw, 3.6rem);
+        line-height: 1.04;
+        letter-spacing: -0.02em;
+        color: var(--ink-1);
+        font-variation-settings: "opsz" 144, "SOFT" 30;
+        max-width: 18ch;
+      }
+      .cover-title em {
+        font-style: italic;
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .cover-rule {
+        width: 5rem;
+        height: 4px;
+        background: var(--accent);
+        margin: clamp(1rem, 1.6vw, 1.5rem) 0;
+      }
+      .cover-meta {
+        font-size: clamp(0.78rem, 0.88vw, 0.92rem);
+        color: var(--ink-soft);
+        line-height: 1.45;
+      }
+      .cover-meta dl {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: clamp(0.45rem, 0.7vw, 0.7rem) clamp(1rem, 1.4vw, 1.4rem);
+        align-items: baseline;
+      }
+      .cover-meta dt {
+        font-family: var(--font-mono);
+        font-size: clamp(0.62rem, 0.72vw, 0.76rem);
+        color: var(--ink-mute);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding-top: 0.1rem;
+      }
+      .cover-meta dd {
+        color: var(--ink-body);
+      }
+      .cover-right {
+        background: var(--paper-2);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(2rem, 3vw, 3rem);
+      }
+      /* Marca tipográfica como fondo derecho */
+      .cover-mark {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-variation-settings: "opsz" 144;
+        font-size: clamp(8rem, 18vw, 18rem);
+        line-height: 0.86;
+        color: var(--ink-1);
+        letter-spacing: -0.05em;
+        text-align: center;
+        position: relative;
+      }
+      .cover-mark span {
+        display: block;
+      }
+      .cover-mark .yr {
+        font-size: clamp(2rem, 4vw, 4rem);
+        font-family: var(--font-mono);
+        font-weight: 400;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+        margin-top: clamp(0.5rem, 1vw, 1rem);
+      }
+      /* Decoración: grid sutil detrás de la marca */
+      .cover-right::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+            rgba(11, 37, 69, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(11, 37, 69, 0.05) 1px,
+            transparent 1px
+          );
+        background-size: 64px 64px;
+        background-position: -1px -1px;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .cover-right .cover-mark {
+        z-index: 1;
+      }
+
+      /* ===========================================
+         CARDS
+         =========================================== */
+      .card {
+        background: #ffffff;
+        border: 1px solid var(--rule);
+        padding: clamp(1.1rem, 1.6vw, 1.5rem) clamp(1.2rem, 1.8vw, 1.6rem);
+        position: relative;
+      }
+      .card.has-accent::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--accent);
+      }
+      .card h3 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+        color: var(--ink-1);
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+      }
+      .card p {
+        font-size: var(--small-size);
+        line-height: 1.5;
+        color: var(--ink-body);
+      }
+      .card .badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        background: var(--paper-2);
+        color: var(--ink-2);
+        padding: 0.2rem 0.55rem;
+        margin-bottom: 0.55rem;
+        letter-spacing: 0.04em;
+        border: 1px solid var(--rule);
+      }
+      .card .badge.accent {
+        background: var(--accent-tint);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ===========================================
+         TABLES
+         =========================================== */
+      table.data {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--small-size);
+        background: #ffffff;
+        border: 1px solid var(--rule);
+      }
+      table.data caption {
+        text-align: left;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ink-mute);
+        padding: 0.4rem 0;
+        caption-side: bottom;
+        margin-top: 0.6rem;
+      }
+      table.data th,
+      table.data td {
+        text-align: left;
+        padding: clamp(0.55rem, 1vw, 0.85rem) clamp(0.7rem, 1.2vw, 1.1rem);
+        vertical-align: top;
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      table.data thead th {
+        background: var(--paper-2);
+        font-family: var(--font-mono);
+        font-weight: 500;
+        font-size: var(--tiny-size);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-1);
+        border-bottom: 1px solid var(--rule);
+      }
+      table.data tbody tr:last-child th,
+      table.data tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      table.data tr.highlight {
+        background: var(--accent-tint);
+      }
+      table.data tr.highlight td:first-child {
+        position: relative;
+      }
+      table.data tr.highlight td:first-child::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--accent);
+      }
+      table.data .check {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      table.data .mute {
+        color: var(--ink-mute);
+      }
+
+      /* ===========================================
+         TIMELINE (metodología)
+         =========================================== */
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: clamp(0.8rem, 1.4vw, 1.3rem);
+        position: relative;
+        align-items: stretch;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 1.1rem;
+        left: 1.5%;
+        right: 1.5%;
+        height: 1px;
+        background: var(--rule);
+        z-index: 0;
+      }
+      .tl-step {
+        position: relative;
+        padding-top: 2.6rem;
+        z-index: 1;
+      }
+      .tl-step::before {
+        content: "";
+        position: absolute;
+        top: 0.45rem;
+        left: 0;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background: var(--paper-1);
+        border: 2px solid var(--ink-3);
+      }
+      .tl-step.tt2::before {
+        border-color: var(--accent);
+        background: var(--accent-tint);
+      }
+      .tl-step .tl-num {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--accent);
+        letter-spacing: 0.1em;
+      }
+      .tl-step h3 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: var(--h3-size);
+        color: var(--ink-1);
+        line-height: 1.25;
+        margin: 0.25rem 0 0.45rem;
+      }
+      .tl-step p {
+        font-size: var(--small-size);
+        line-height: 1.5;
+        color: var(--ink-body);
+      }
+      .tl-step.tt2 .tl-num {
+        color: var(--accent);
+      }
+      .tl-tag {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        padding: 0.1rem 0.45rem;
+        background: var(--paper-2);
+        color: var(--ink-2);
+        border: 1px solid var(--rule);
+        margin-top: 0.55rem;
+      }
+      .tl-tag.tt2 {
+        background: var(--accent-tint);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* ===========================================
+         ZERO TRUST FLOW (11 pasos) — SVG dibujado a mano
+         =========================================== */
+      .zt-flow {
+        background: #ffffff;
+        border: 1px solid var(--rule);
+        padding: clamp(1rem, 1.4vw, 1.4rem);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: clamp(0.6rem, 1vw, 1rem);
+      }
+      .zt-flow .planes {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.6rem 1rem;
+        align-items: center;
+      }
+      .zt-plane {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ink-mute);
+        padding: 0.35rem 0;
+        border-right: 1px solid var(--rule-soft);
+        padding-right: 0.9rem;
+        text-align: right;
+      }
+      .zt-row {
+        display: flex;
+        gap: 0.6rem;
+        align-items: stretch;
+      }
+      .zt-node {
+        background: var(--paper-1);
+        border: 1px solid var(--rule);
+        padding: 0.6rem 0.75rem;
+        flex: 1;
+        position: relative;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        color: var(--ink-body);
+      }
+      .zt-node .n {
+        font-family: var(--font-mono);
+        font-size: 0.66rem;
+        color: var(--accent);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+      }
+      .zt-node strong {
+        display: block;
+        font-family: var(--font-body);
+        font-weight: 600;
+        color: var(--ink-1);
+        font-size: 0.86rem;
+        margin: 0.1rem 0 0.2rem;
+      }
+      .zt-node small {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        color: var(--ink-mute);
+      }
+      .zt-node.accent {
+        background: var(--accent-tint);
+        border-color: var(--accent);
+      }
+      .zt-node.accent strong {
+        color: var(--ink-1);
+      }
+      .zt-arrow {
+        align-self: center;
+        color: var(--ink-mute);
+        font-family: var(--font-mono);
+      }
+
+      /* ===========================================
+         F-BETA formula box
+         =========================================== */
+      .formula {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 500;
+        font-size: clamp(1.4rem, 2vw, 1.9rem);
+        color: var(--ink-1);
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .formula .frac {
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 0.86em;
+        line-height: 1.15;
+        margin: 0 0.25rem;
+      }
+      .formula .frac .num {
+        border-bottom: 1.5px solid var(--ink-1);
+        padding: 0 0.45rem 0.18rem;
+      }
+      .formula .frac .den {
+        padding: 0.2rem 0.45rem 0;
+      }
+      .formula sub {
+        font-size: 0.6em;
+        vertical-align: -0.25em;
+      }
+      .formula sup {
+        font-size: 0.6em;
+        vertical-align: 0.45em;
+      }
+      .formula em {
+        font-style: italic;
+      }
+      .formula-caption {
+        margin-top: 0.6rem;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+      }
+      .formula-box {
+        background: #ffffff;
+        border: 1px solid var(--rule);
+        padding: clamp(1.4rem, 2vw, 2rem);
+        text-align: center;
+      }
+
+      /* ===========================================
+         OBJETIVO — bloque quote elegante
+         =========================================== */
+      .quote-block {
+        background: #ffffff;
+        border-left: 4px solid var(--accent);
+        padding: clamp(1.6rem, 2.6vw, 2.4rem) clamp(1.6rem, 2.6vw, 2.4rem);
+        position: relative;
+      }
+      .quote-block::before {
+        content: "“";
+        position: absolute;
+        top: -0.4rem;
+        left: 0.6rem;
+        font-family: var(--font-display);
+        font-size: clamp(4rem, 6vw, 7rem);
+        font-weight: 600;
+        color: var(--accent);
+        line-height: 1;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .quote-block p {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.15rem, 1.55vw, 1.6rem);
+        line-height: 1.5;
+        color: var(--ink-1);
+      }
+      .quote-block p em {
+        color: var(--accent);
+        font-style: italic;
+      }
+      .quote-block cite {
+        display: block;
+        margin-top: 1rem;
+        font-style: normal;
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* ===========================================
+         OPs — lista
+         =========================================== */
+      .op-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(0.9rem, 1.4vw, 1.3rem);
+      }
+      .op-card {
+        background: #ffffff;
+        border: 1px solid var(--rule);
+        padding: clamp(1rem, 1.4vw, 1.4rem);
+        position: relative;
+      }
+      .op-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--ink-3);
+      }
+      .op-card.tt2::before {
+        background: var(--accent);
+      }
+      .op-id {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .op-id span {
+        color: var(--ink-mute);
+        font-style: normal;
+      }
+      .op-card p {
+        font-size: var(--small-size);
+        line-height: 1.5;
+        color: var(--ink-body);
+        margin-top: 0.45rem;
+      }
+
+      /* ===========================================
+         DIAGRAM SLIDES — image presenter
+         =========================================== */
+      .diagram-slide {
+        display: flex;
+        flex-direction: column;
+      }
+      .diagram-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.6rem, 1vw, 1rem);
+        padding: clamp(0.8rem, 1.4vw, 1.4rem) 0;
+        max-height: 100%;
+      }
+      .diagram-wrap img {
+        max-width: 100%;
+        max-height: 62vh;
+        object-fit: contain;
+        background: #ffffff;
+        border: 1px solid var(--rule);
+        padding: clamp(0.6rem, 1.2vw, 1.2rem);
+      }
+      .figure-caption {
+        font-family: var(--font-mono);
+        font-size: var(--tiny-size);
+        color: var(--ink-mute);
+        text-align: center;
+        letter-spacing: 0.06em;
+      }
+      .figure-caption strong {
+        color: var(--ink-1);
+      }
+      .diagram-side {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: clamp(1.2rem, 2vw, 2rem);
+        align-items: stretch;
+        flex: 1;
+      }
+      .diagram-side .diagram-wrap {
+        padding: 0;
+      }
+      .diagram-side .diagram-wrap img {
+        max-height: 68vh;
+      }
+      .diagram-side aside {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: clamp(0.7rem, 1vw, 1rem);
+      }
+      .diagram-side aside p {
+        font-size: var(--small-size);
+        color: var(--ink-body);
+        line-height: 1.5;
+      }
+      .diagram-side aside ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .diagram-side aside li {
+        font-size: var(--small-size);
+        line-height: 1.5;
+        padding-left: 1rem;
+        position: relative;
+        color: var(--ink-body);
+      }
+      .diagram-side aside li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55rem;
+        width: 0.55rem;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      /* ===========================================
+         BULLETS minimalistas
+         =========================================== */
+      ul.minimal {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.55rem, 0.9vw, 0.9rem);
+      }
+      ul.minimal li {
+        padding-left: 1.3rem;
+        position: relative;
+        line-height: 1.5;
+        font-size: var(--body-size);
+      }
+      ul.minimal li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.62em;
+        width: 0.65rem;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      /* ===========================================
+         ESTADO DEL ARTE — tabla resumen
+         =========================================== */
+      .ax-table th.ax-col {
+        text-align: center;
+        font-size: 0.66rem;
+      }
+      .ax-table .ax-half {
+        color: var(--ink-mute);
+      }
+      .ax-table .ax-full {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      /* ===========================================
+         GRACIAS slide
+         =========================================== */
+      .thanks {
+        background: var(--paper-1);
+      }
+      .thanks .slide-content {
+        text-align: center;
+        align-items: center;
+      }
+      .thanks .slide-content > * {
+        margin-inline: auto;
+      }
+      .thanks h2 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(3rem, 5.6vw, 5.4rem);
+        line-height: 1;
+        letter-spacing: -0.025em;
+        color: var(--ink-1);
+        font-variation-settings: "opsz" 144, "SOFT" 50;
+      }
+      .thanks h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .thanks .meta {
+        font-family: var(--font-mono);
+        font-size: var(--small-size);
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+        margin-top: clamp(1rem, 2vw, 1.6rem);
+        line-height: 1.7;
+      }
+
+      /* ===========================================
+         PROGRESS BAR
+         =========================================== */
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: var(--accent);
+        z-index: 1000;
+        transition: width 0.3s var(--ease-out-expo);
+        pointer-events: none;
+      }
+
+      /* ===========================================
+         BLANK overlay
+         =========================================== */
+      body.blanked {
+        background: #000;
+      }
+      body.blanked .slide,
+      body.blanked .slide-frame,
+      body.blanked .slide-foot,
+      body.blanked .progress-bar {
+        visibility: hidden;
+      }
+
+      /* ===========================================
+         RESPONSIVE BREAKPOINTS
+         =========================================== */
+      @media (max-height: 760px) {
+        :root {
+          --slide-padding: clamp(1.5rem, 3vw, 3rem);
+          --content-gap: clamp(0.8rem, 1.5vw, 1.4rem);
+          --title-size: clamp(1.9rem, 3.8vw, 3.2rem);
+        }
+        .cover-grid {
+          grid-template-columns: 5fr 3fr;
+        }
+        .cover-mark {
+          font-size: clamp(6rem, 14vw, 13rem);
+        }
+      }
+      @media (max-height: 620px) {
+        :root {
+          --slide-padding: clamp(1.2rem, 2.5vw, 2.4rem);
+        }
+        .timeline {
+          gap: 0.8rem;
+        }
+        .timeline::before {
+          display: none;
+        }
+        .tl-step {
+          padding-top: 0;
+        }
+        .tl-step::before {
+          display: none;
+        }
+      }
+      @media (max-width: 980px) {
+        .grid-2,
+        .op-list,
+        .diagram-side,
+        .cover-grid {
+          grid-template-columns: 1fr;
+        }
+        .grid-3,
+        .timeline {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .cover-left {
+          border-right: 0;
+          border-bottom: 1px solid var(--rule);
+        }
+      }
+      @media (max-width: 640px) {
+        .grid-3,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.2s !important;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- ============================================================
+         01 — PORTADA
+         ============================================================ -->
+    <section class="slide cover" data-slide="01">
+      <div class="cover-grid">
+        <div class="cover-left">
+          <div class="reveal">
+            <div class="cover-logos">
+              <img src="assets/img/logo-ipn.png" alt="IPN" />
+              <img src="assets/img/logo-escom.png" alt="ESCOM" />
+            </div>
+            <div class="cover-eyebrow" style="margin-top: 0.8rem;">
+              Instituto Politécnico Nacional · Escuela Superior de Cómputo
+            </div>
+          </div>
+
+          <div>
+            <div class="reveal" style="font-family: var(--font-mono); font-size: var(--tiny-size); letter-spacing: 0.16em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem;">
+              Trabajo Terminal 2026-B182 · Defensa TT1
+            </div>
+            <h1 class="cover-title reveal">
+              Esquema preventivo de privacidad para PICIS en la versión de nube basado en la arquitectura <em>Zero Trust</em>
+            </h1>
+            <div class="cover-rule reveal" aria-hidden="true"></div>
+          </div>
+
+          <div class="cover-meta reveal">
+            <dl>
+              <dt>Equipo</dt>
+              <dd>
+                Francisco López Carlos Uriel<br />
+                Leyva García Diego Alejandro<br />
+                Romero Carreón Miguel Arturo
+              </dd>
+              <dt>Directores</dt>
+              <dd>
+                Dra. Cortez Duarte Nidia Asunción<br />
+                Dr. Aguirre Anaya Eleazar
+              </dd>
+              <dt>Sinodales</dt>
+              <dd>
+                Dr. Cruz Torres Benjamín<br />
+                M. en C. Flores Estrada Iturriel Enrique<br />
+                M. en C. Cruz García Daniel
+              </dd>
+              <dt>Seguimiento</dt>
+              <dd>Dra. Morales Rodríguez Ursula Samantha</dd>
+              <dt>Fecha</dt>
+              <dd>26 de mayo de 2026 · Ciudad de México</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="cover-right">
+          <div class="cover-mark reveal" aria-hidden="true">
+            <span>PICIS</span>
+            <span class="yr">2026 · B182</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         02 — INTRODUCCIÓN
+         ============================================================ -->
+    <section class="slide" data-slide="02">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">02 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Introducción</div>
+        <h2 class="slide-title reveal">
+          Datos sensibles publicados <span class="accent-word">por error</span> en portales institucionales
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-2" style="margin-top: 0.6rem;">
+          <p class="lead reveal">
+            Cada institución del sector público y privado publica miles de
+            documentos en sus portales. Una proporción no menor contiene, sin
+            advertirlo, <strong>información sensible</strong>: registros
+            personales, credenciales, expedientes médicos o financieros.
+          </p>
+          <div class="reveal">
+            <div class="card has-accent">
+              <span class="badge">PICIS · CIC-IPN</span>
+              <h3>Plataforma para detectar antes de que sea tarde</h3>
+              <p>
+                Desarrollada por el Laboratorio de Ciberseguridad del
+                <strong>CIC-IPN</strong>. Automatiza la búsqueda y la
+                catalogación de información sensible publicada inadvertidamente
+                mediante <em>web scraping</em> sobre dominios autorizados y un
+                clasificador NLP/IA. Taxonomía operativa: <strong>55 tipos</strong>
+                de información sensible en 10 categorías.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.6rem;">
+          Reporte técnico · Cap. 0 — Introducción · §0.1
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         03 — PROBLEMÁTICA
+         ============================================================ -->
+    <section class="slide" data-slide="03">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">03 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Problemática</div>
+        <h2 class="slide-title reveal">
+          Migrar PICIS a la nube <span class="accent-word">disuelve</span> tres garantías
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <p class="lead reveal" style="margin-bottom: 1.6rem;">
+          La versión <em>on-premise</em> opera tras un perímetro de red físico.
+          Al pasar a Google Cloud Platform tres propiedades que se daban por
+          hechas dejan de cumplirse y deben reconstruirse explícitamente.
+        </p>
+        <div class="grid-3">
+          <div class="card has-accent reveal">
+            <span class="badge">Problema 01</span>
+            <h3>Perímetro lógico disuelto</h3>
+            <p>
+              La red corporativa ya no protege los recursos. Cada solicitud
+              debe verificarse por sí misma con políticas contextuales — no
+              hay confianza implícita por origen.
+            </p>
+          </div>
+          <div class="card has-accent reveal">
+            <span class="badge">Problema 02</span>
+            <h3>Identidades con claves estáticas</h3>
+            <p>
+              Los microservicios usaban credenciales persistentes de larga
+              duración en archivos de configuración: un vector permanente de
+              filtración e impersonación.
+            </p>
+          </div>
+          <div class="card has-accent reveal">
+            <span class="badge">Problema 03</span>
+            <h3>Conformidad reconfigurada</h3>
+            <p>
+              La reforma constitucional mexicana de 2025 extiende las
+              obligaciones de protección de datos personales explícitamente al
+              cómputo en la nube.
+            </p>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 1 — Antecedentes · §1.2-1.4
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         04 — OBJETIVO GENERAL
+         ============================================================ -->
+    <section class="slide" data-slide="04">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">04 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Objetivo general</div>
+        <h2 class="slide-title reveal">
+          Una <span class="accent-word">declaración</span> y cuatro compromisos
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="quote-block reveal" style="margin-top: 0.8rem; max-width: 1080px;">
+          <p>
+            Implementar un esquema preventivo unificado para ofrecer
+            <em>privacidad</em>, <em>confidencialidad</em> e
+            <em>integridad</em> de los datos sensibles de la versión en nube
+            de PICIS, mediante la integración de controles técnicos en las
+            funciones de <em>Identificar</em> y <em>Proteger</em> de acuerdo
+            a los <em>frameworks</em> del NIST.
+          </p>
+          <cite>Protocolo aprobado · Cap. 1 — Objetivo general</cite>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.6rem;">
+          Reporte técnico · Cap. 1 — Antecedentes · §1.5 — cita verbatim del
+          protocolo aprobado por la dirección
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         05 — OBJETIVOS PARTICULARES
+         ============================================================ -->
+    <section class="slide" data-slide="05">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">05 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Objetivos particulares</div>
+        <h2 class="slide-title reveal">
+          Tres cierran en TT1, uno se <span class="accent-word">demuestra</span> en TT2
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="op-list reveal">
+          <div class="op-card">
+            <span class="op-id">OP-1 · <span>Caracterización</span></span>
+            <p>
+              Caracterizar la brecha de seguridad entre la versión on-premise
+              y la versión de nube de PICIS, con cada activo trazado a un
+              control existente y un control objetivo.
+            </p>
+          </div>
+          <div class="op-card">
+            <span class="op-id">OP-2 · <span>Diseño de controles</span></span>
+            <p>
+              Establecer un conjunto coherente de controles técnicos en
+              <em>Identificar</em> y <em>Proteger</em> del NIST CSF 2.0, de
+              modo que cada subcategoría aplicable cuente con al menos un
+              control asociado.
+            </p>
+          </div>
+          <div class="op-card">
+            <span class="op-id">OP-3 · <span>Trazabilidad normativa</span></span>
+            <p>
+              Garantizar la conformidad simultánea con la legislación mexicana
+              y los marcos NIST, de modo que cada artículo aplicable cuente
+              con al menos un control técnico que lo instrumente.
+            </p>
+          </div>
+          <div class="op-card tt2">
+            <span class="op-id" style="color: var(--accent);">
+              OP-4 · <span style="color: var(--ink-mute);">Validación operativa (TT2)</span>
+            </span>
+            <p>
+              Demostrar el funcionamiento operativo mediante una matriz de
+              pruebas con un caso por control, criterio numérico de
+              aceptación y evidencia de ejecución.
+            </p>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.2rem;">
+          Reporte técnico · Cap. 1 — Antecedentes · §1.5 — cita verbatim
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         06 — ESTADO DEL ARTE
+         ============================================================ -->
+    <section class="slide" data-slide="06">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">06 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Estado del arte</div>
+        <h2 class="slide-title reveal">
+          23 trabajos en seis ejes — ninguno cubre <span class="accent-word">los seis a la vez</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="reveal" style="overflow: auto;">
+          <table class="data ax-table">
+            <thead>
+              <tr>
+                <th>Aporte representativo</th>
+                <th class="ax-col">ZT en GCP</th>
+                <th class="ax-col">NLP de PII</th>
+                <th class="ax-col">PIA con IA</th>
+                <th class="ax-col">Conformidad MX</th>
+                <th class="ax-col">CMEK · multi-tenant</th>
+                <th class="ax-col">Sin claves estáticas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NIST SP 800-207 · <span class="mute">arquitectura ZT</span></td>
+                <td class="ax-col ax-half">parcial</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col ax-half">parcial</td>
+              </tr>
+              <tr>
+                <td>Microsoft Presidio · Purview <span class="mute">(NLP + F<sub>β=2</sub>)</span></td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-half">parcial</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+              </tr>
+              <tr>
+                <td>Workload Identity Federation <span class="mute">(GCP)</span></td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col ax-half">parcial</td>
+                <td class="ax-col ax-full">✓</td>
+              </tr>
+              <tr>
+                <td>NIST Privacy Framework 1.0 · PIA IA <span class="mute">(GAO 2024)</span></td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-half">parcial</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+              </tr>
+              <tr>
+                <td>Lineamientos INAI · LGPDPPSO 2025 <span class="mute">(MX)</span></td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col ax-half">parcial</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col mute">—</td>
+                <td class="ax-col mute">—</td>
+              </tr>
+              <tr class="highlight">
+                <td>
+                  <strong>Esquema preventivo PICIS</strong>
+                  <span class="mute"> · este TT</span>
+                </td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-full">✓</td>
+                <td class="ax-col ax-full">✓</td>
+              </tr>
+            </tbody>
+            <caption>
+              Tabla 1. Cobertura comparativa contra los 6 ejes — fragmento ilustrativo de la matriz analítica completa con 23 trabajos (Anexo H).
+            </caption>
+          </table>
+        </div>
+        <p class="ref reveal" style="margin-top: 0.9rem;">
+          Reporte técnico · Cap. 2 — Estado del arte · §2.1-2.7 · Anexo H — matriz analítica
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         07 — MARCO TEÓRICO · NIST
+         ============================================================ -->
+    <section class="slide" data-slide="07">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">07 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Marco teórico · 01</div>
+        <h2 class="slide-title reveal">
+          Cuatro marcos del <span class="accent-word">NIST</span> trabajando juntos
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-2" style="margin-top: 0.6rem;">
+          <div class="card reveal">
+            <span class="badge">CSF 2.0</span>
+            <h3>NIST Cybersecurity Framework 2.0</h3>
+            <p>
+              Marco rector. El esquema se concentra en las funciones
+              <strong>Identify</strong> y <strong>Protect</strong>. La función
+              <em>Govern</em> se ejerce a nivel institución.
+              <span class="ref">[1] NIST 2024</span>
+            </p>
+          </div>
+          <div class="card reveal">
+            <span class="badge">Privacy Framework 1.0</span>
+            <h3>Gestión de riesgo de privacidad</h3>
+            <p>
+              Complemento centrado en derechos del titular. Articula PIA y
+              minimización con las funciones del CSF.
+              <span class="ref">[2] NIST 2020</span>
+            </p>
+          </div>
+          <div class="card reveal">
+            <span class="badge">SP 800-53 Rev. 5</span>
+            <h3>Catálogo institucional de controles</h3>
+            <p>
+              De su catálogo se derivan y personalizan los <strong>22 controles</strong>
+              del esquema preventivo, ajustados a la realidad de PICIS.
+              <span class="ref">[3] NIST 2020</span>
+            </p>
+          </div>
+          <div class="card has-accent reveal">
+            <span class="badge accent">SP 800-207</span>
+            <h3>Zero Trust Architecture</h3>
+            <p>
+              Cada solicitud se evalúa de forma independiente. Sin privilegios
+              por origen ni por ubicación de red. Base del flujo de
+              autorización del esquema.
+              <span class="ref">[4] NIST 2020</span>
+            </p>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.2rem;">
+          Reporte técnico · Cap. 3 — Marco teórico · §3.1-3.4
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         08 — MARCO TEÓRICO · LEGISLACIÓN MX
+         ============================================================ -->
+    <section class="slide" data-slide="08">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">08 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Marco teórico · 02</div>
+        <h2 class="slide-title reveal">
+          Legislación mexicana de privacidad — <span class="accent-word">vigente 2025</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <ul class="minimal reveal" style="margin-top: 0.6rem;">
+          <li>
+            <strong>LFPDPPP</strong> (sector privado) · arts. 5, 12, 18-20 —
+            principios de licitud, responsabilidad, calidad y seguridad
+            técnica. <span class="ref">[5]</span>
+          </li>
+          <li>
+            <strong>Reglamento de la LFPDPPP</strong> · arts. 52 y 57-62 —
+            obligaciones específicas para <em>cómputo en la nube</em> y
+            relación responsable–encargado. <span class="ref">[6]</span>
+          </li>
+          <li>
+            <strong>LGPDPPSO</strong> (sujetos obligados) · arts. 25-30,
+            32-33 — deberes de seguridad y bitácora de vulneraciones.
+            <span class="ref">[7]</span>
+          </li>
+          <li>
+            <span class="accent-word">Art. 22 LGPDPPSO</span> — decisiones
+            automatizadas que afectan al titular deben ser explicables y
+            contar con validación humana significativa.
+          </li>
+          <li>
+            <strong>Reforma constitucional 2025</strong> — extinguió al INAI
+            y reasignó funciones; sus criterios conservan valor metodológico
+            para el TT.
+          </li>
+        </ul>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 3 — Marco teórico · §3.5-3.9 · Anexo E —
+          mapeo normativo bidireccional artículo ↔ control
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         09 — MARCO TEÓRICO · F-BETA
+         ============================================================ -->
+    <section class="slide" data-slide="09">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">09 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Marco teórico · 03</div>
+        <h2 class="slide-title reveal">
+          Métrica de evaluación — F<sub style="font-size: 0.55em;">β</sub> con <span class="accent-word">β = 2</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-2" style="margin-top: 0.6rem;">
+          <div class="reveal">
+            <p class="lead" style="margin-bottom: 1rem;">
+              Adoptada de Microsoft Presidio y Purview como referencia de
+              evaluación del clasificador NLP/IA para TT2. Da el doble de
+              importancia a la <em>exhaustividad</em> (recall) que a la
+              <em>precisión</em>: en privacidad, los falsos negativos cuestan
+              más que los falsos positivos.
+            </p>
+            <p class="ref">
+              Reporte técnico · Cap. 3 — Marco teórico · §3.10 · Cap. 6 —
+              criterios de aceptación de TT2 (RNF-10)
+            </p>
+          </div>
+          <div class="formula-box reveal">
+            <div class="formula">
+              F<sub>β</sub> &nbsp;=&nbsp;
+              <span style="display: inline-block;">(1 + β<sup>2</sup>)</span>
+              &nbsp;·&nbsp;
+              <span class="frac">
+                <span class="num">precision · recall</span>
+                <span class="den">β<sup>2</sup> · precision + recall</span>
+              </span>
+            </div>
+            <div class="formula-caption">
+              Con β = 2 → ponderación favorable al <em>recall</em>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         10 — HERRAMIENTAS TECNOLÓGICAS
+         ============================================================ -->
+    <section class="slide" data-slide="10">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">10 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Herramientas tecnológicas</div>
+        <h2 class="slide-title reveal">
+          Por qué <span class="accent-word">Google Cloud Platform</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="reveal" style="overflow: auto;">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Criterio</th>
+                <th>AWS</th>
+                <th>Microsoft Azure</th>
+                <th>Google Cloud Platform</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Zero Trust nativo · proxy de identidad</td>
+                <td>Verified Access</td>
+                <td>Entra Private Access</td>
+                <td><span class="check">Identity-Aware Proxy + Access Context Mgr.</span></td>
+              </tr>
+              <tr>
+                <td>Federación sin claves estáticas para workloads</td>
+                <td>IAM Roles Anywhere · parcial</td>
+                <td>Managed Identities · parcial</td>
+                <td><span class="check">Workload Identity Federation (RFC 8693)</span></td>
+              </tr>
+              <tr>
+                <td>CMEK con HSM gestionado</td>
+                <td>KMS · CloudHSM</td>
+                <td>Key Vault HSM</td>
+                <td><span class="check">Cloud KMS con HSM y rotación nativa</span></td>
+              </tr>
+              <tr>
+                <td>Clasificación NLP de PII nativa</td>
+                <td>Macie (limitado a S3)</td>
+                <td>Purview (catálogo)</td>
+                <td><span class="check">Sensitive Data Protection + DLP</span></td>
+              </tr>
+              <tr>
+                <td>Almacenamiento inmutable WORM</td>
+                <td>S3 Object Lock</td>
+                <td>Blob immutable storage</td>
+                <td><span class="check">Cloud Storage Bucket Lock</span></td>
+              </tr>
+              <tr class="highlight">
+                <td><strong>Elección del TT</strong></td>
+                <td class="mute">—</td>
+                <td class="mute">—</td>
+                <td><strong>Mejor integración para una carga NLP institucional bajo ZT</strong></td>
+              </tr>
+            </tbody>
+            <caption>Tabla 2. Comparativa de plataformas cloud — criterios derivados de los OP y los requisitos no funcionales.</caption>
+          </table>
+        </div>
+        <p class="ref reveal" style="margin-top: 0.9rem;">
+          Reporte técnico · Cap. 4 — Análisis · §4.3 — selección de
+          plataforma. Anexo B — comparativa extendida.
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         11 — METODOLOGÍA
+         ============================================================ -->
+    <section class="slide" data-slide="11">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">11 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Metodología</div>
+        <h2 class="slide-title reveal">
+          Cinco etapas — cuatro <span class="accent-word">cierran en TT1</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="timeline reveal">
+          <div class="tl-step">
+            <span class="tl-num">ETAPA 01</span>
+            <h3>Caracterización de la brecha</h3>
+            <p>
+              Activos del on-premise vs nube. Control existente vs control
+              objetivo.
+            </p>
+            <span class="tl-tag">TT1</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-num">ETAPA 02</span>
+            <h3>Análisis normativo</h3>
+            <p>
+              Mapeo bidireccional artículo ↔ control con LFPDPPP, LGPDPPSO y
+              NIST.
+            </p>
+            <span class="tl-tag">TT1</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-num">ETAPA 03</span>
+            <h3>Diseño de controles</h3>
+            <p>
+              22 controles instrumentados en GCP, agrupados en C / I / P.
+              Cubren <em>Identify</em> y <em>Protect</em>.
+            </p>
+            <span class="tl-tag">TT1</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-num">ETAPA 04</span>
+            <h3>Análisis de impacto (PIA)</h3>
+            <p>
+              PIA del módulo de clasificación NLP/IA en siete bloques.
+              Decisión residual documentada.
+            </p>
+            <span class="tl-tag">TT1</span>
+          </div>
+          <div class="tl-step tt2">
+            <span class="tl-num">ETAPA 05</span>
+            <h3>Despliegue y pruebas</h3>
+            <p>
+              Aprovisionamiento declarativo, matriz de pruebas con caso por
+              control y evidencia operativa.
+            </p>
+            <span class="tl-tag tt2">TT2</span>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 4 — Análisis · §4.1 — metodología en fases
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         12 — ANÁLISIS · BRECHA
+         ============================================================ -->
+    <section class="slide" data-slide="12">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">12 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Análisis</div>
+        <h2 class="slide-title reveal">
+          La brecha como tabla — <span class="accent-word">activo a activo</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="reveal">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Activo / superficie</th>
+                <th>Control existente <em>(on-premise)</em></th>
+                <th>Control objetivo <em>(nube)</em></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Identidad de microservicios</td>
+                <td>Claves estáticas en archivos de configuración</td>
+                <td><span class="check">Workload Identity Federation · tokens ≤ 1 h</span></td>
+              </tr>
+              <tr>
+                <td>Acceso a backend de aplicación</td>
+                <td>Perímetro de red interna · firewall</td>
+                <td><span class="check">Identity-Aware Proxy + Access Context Manager</span></td>
+              </tr>
+              <tr>
+                <td>Cifrado en reposo de datos sensibles</td>
+                <td>Cifrado de volumen genérico</td>
+                <td><span class="check">Cloud KMS con CMEK · DEK por dataset</span></td>
+              </tr>
+              <tr>
+                <td>Bitácora de auditoría</td>
+                <td>Logs locales en disco</td>
+                <td><span class="check">Cloud Audit Logs en Bucket Lock WORM</span></td>
+              </tr>
+              <tr>
+                <td>Clasificación de PII en documentos scrapeados</td>
+                <td>Reglas locales del clasificador</td>
+                <td><span class="check">SDP + clasificador NLP/IA del esquema</span></td>
+              </tr>
+              <tr>
+                <td>Decisión automatizada del clasificador</td>
+                <td>Sin registro de explicabilidad</td>
+                <td><span class="check">Trazabilidad + validación del Analista (art. 22)</span></td>
+              </tr>
+            </tbody>
+            <caption>Tabla 3. Fragmento de la matriz de brecha — la completa se encuentra en el Anexo I.</caption>
+          </table>
+        </div>
+        <p class="ref reveal" style="margin-top: 0.9rem;">
+          Reporte técnico · Cap. 4 — Análisis · §4.2 · Anexo I — matriz de brecha
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         13 — REQUISITOS F Y NF
+         ============================================================ -->
+    <section class="slide" data-slide="13">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">13 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Requisitos</div>
+        <h2 class="slide-title reveal">
+          Doce funcionales · diez no funcionales — todos con <span class="accent-word">criterio medible</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <p class="lead reveal" style="margin-bottom: 1.2rem;">
+          Cada requisito tiene criterio de aceptación medible y trazabilidad
+          explícita al OP y al control del catálogo que lo materializa.
+        </p>
+        <div class="grid-2">
+          <div class="card has-accent reveal">
+            <span class="badge">12 funcionales</span>
+            <h3>Qué debe hacer el esquema</h3>
+            <ul class="minimal" style="margin-top: 0.6rem;">
+              <li><strong>RF-02</strong> · clasificar PII en cuatro niveles (N1-N4)</li>
+              <li><strong>RF-04</strong> · acceso Zero Trust por contexto</li>
+              <li><strong>RF-05 / 06</strong> · cifrado en reposo y tránsito con CMEK</li>
+              <li><strong>RF-07</strong> · logs inmutables en Bucket WORM</li>
+              <li><strong>RF-12</strong> · trazabilidad de decisiones de IA</li>
+            </ul>
+          </div>
+          <div class="card reveal">
+            <span class="badge">10 no funcionales</span>
+            <h3>Cómo debe comportarse</h3>
+            <ul class="minimal" style="margin-top: 0.6rem;">
+              <li><strong>RNF-01</strong> · cumplimiento legal mexicano</li>
+              <li><strong>RNF-02</strong> · alineación NIST CSF 2.0</li>
+              <li><strong>RNF-08</strong> · aprovisionamiento declarativo reproducible</li>
+              <li><strong>RNF-09</strong> · reducción verificable de superficie</li>
+              <li><strong>RNF-10</strong> · F<sub>β=2</sub> como criterio de aceptación (TT2)</li>
+            </ul>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.2rem;">
+          Reporte técnico · Cap. 4 — Análisis · §4.4-4.5 · Anexo A —
+          catálogo completo de requisitos
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         14 — DISEÑO · C1 CONTEXTO
+         ============================================================ -->
+    <section class="slide diagram-slide" data-slide="14">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">14 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · arquitectura C1</div>
+        <h2 class="slide-title reveal" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">
+          PICIS sobre GCP — diagrama de <span class="accent-word">contexto</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="diagram-wrap reveal">
+          <img src="assets/img/c1-contexto.png" alt="C1 — Diagrama de contexto PICIS sobre GCP" />
+          <div class="figure-caption">
+            <strong>Fig. 1.</strong> Diagrama C4 nivel 1 — PICIS, sus
+            usuarios, los portales auditados y los servicios gestionados de
+            GCP.
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         15 — DISEÑO · C2 CONTENEDORES
+         ============================================================ -->
+    <section class="slide diagram-slide" data-slide="15">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">15 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · arquitectura C2</div>
+        <h2 class="slide-title reveal" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">
+          Contenedores — los servicios de GCP que <span class="accent-word">sostienen</span> el esquema
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="diagram-wrap reveal">
+          <img src="assets/img/c2-contenedores.png" alt="C2 — Diagrama de contenedores de PICIS en GCP" />
+          <div class="figure-caption">
+            <strong>Fig. 2.</strong> Diagrama C4 nivel 2 — GKE privado,
+            BigQuery, Cloud Storage, Cloud KMS, Secret Manager y los flujos
+            internos.
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         16 — DISEÑO · FLUJO ZERO TRUST (11 pasos REALES)
+         ============================================================ -->
+    <section class="slide" data-slide="16">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">16 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · flujo de autorización Zero Trust</div>
+        <h2 class="slide-title reveal" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">
+          Once pasos para una sola petición — sin <span class="accent-word">confianza implícita</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="reveal zt-flow" style="margin-top: 0.4rem;">
+          <div class="planes">
+            <div class="zt-plane">Zero Trust</div>
+            <div class="zt-row">
+              <div class="zt-node">
+                <span class="n">01</span>
+                <strong>GET /informe</strong>
+                <small>Cloud Load Balancing · HTTPS · TLS 1.3</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node accent">
+                <span class="n">02</span>
+                <strong>Identity-Aware Proxy</strong>
+                <small>Punto de entrada Zero Trust</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">03</span>
+                <strong>Cloud Identity</strong>
+                <small>Identifica usuario · MFA + grupos</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">04</span>
+                <strong>Access Context Manager</strong>
+                <small>Perímetro lógico · nivel de acceso</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">05</span>
+                <strong>IAP Conditions</strong>
+                <small>Evalúa CEL · rol/contexto/recurso</small>
+              </div>
+            </div>
+
+            <div class="zt-plane">Aplicación</div>
+            <div class="zt-row">
+              <div class="zt-node">
+                <span class="n">06</span>
+                <strong>Backend en GKE privado</strong>
+                <small>IAP firma cabecera JWT y la pasa al pod del clúster</small>
+              </div>
+            </div>
+
+            <div class="zt-plane">Datos</div>
+            <div class="zt-row">
+              <div class="zt-node">
+                <span class="n">07</span>
+                <strong>Workload Identity Federation</strong>
+                <small>Intercambia identidad del pod por token corto · ≤ 1 h</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">08</span>
+                <strong>VPC Service Controls</strong>
+                <small>Valida el perímetro de salida hacia datos</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">09</span>
+                <strong>BigQuery</strong>
+                <small>Vista + máscara por nivel de PII · etiquetas/rol</small>
+              </div>
+              <div class="zt-arrow">›</div>
+              <div class="zt-node">
+                <span class="n">10</span>
+                <strong>Cloud KMS</strong>
+                <small>Desencripta DEK con CMEK usando el token de la SA</small>
+              </div>
+            </div>
+
+            <div class="zt-plane">Auditoría</div>
+            <div class="zt-row">
+              <div class="zt-node accent">
+                <span class="n">11</span>
+                <strong>Cloud Audit Logs</strong>
+                <small>Registra cada evento de IAP, BQ, KMS y WIF en Bucket WORM</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 0.9rem;">
+          <strong>Fig. 3.</strong> Flujo de autorización Zero Trust en 11
+          pasos. Reporte técnico · Cap. 5 — Diseño · §5.3 — diagrama de
+          flujo entre planos.
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         17 — DISEÑO · C3 CLASIFICADOR NLP/IA
+         ============================================================ -->
+    <section class="slide diagram-slide" data-slide="17">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">17 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · arquitectura C3</div>
+        <h2 class="slide-title reveal" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">
+          Componentes del <span class="accent-word">clasificador NLP/IA</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="diagram-wrap reveal">
+          <img src="assets/img/c3-clasificador.png" alt="C3 — Componentes del clasificador NLP/IA" />
+          <div class="figure-caption">
+            <strong>Fig. 4.</strong> Diagrama C4 nivel 3 — módulos internos
+            del clasificador. El Analista (rol RBAC) actúa como validación
+            humana del art. 22 LGPDPPSO.
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         18 — CATÁLOGO DE 22 CONTROLES
+         ============================================================ -->
+    <section class="slide" data-slide="18">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">18 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · catálogo</div>
+        <h2 class="slide-title reveal">
+          22 controles agrupados en <span class="accent-word">tres familias</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-3" style="margin-top: 0.4rem;">
+          <div class="card reveal" style="border-top: 3px solid var(--ink-3);">
+            <span class="badge">8 controles · C-001 → C-008</span>
+            <h3>Confidencialidad</h3>
+            <ul class="minimal" style="margin-top: 0.6rem;">
+              <li><strong>C-001</strong> · cifrado en reposo con CMEK</li>
+              <li><strong>C-002</strong> · cifrado en tránsito TLS 1.3</li>
+              <li><strong>C-003</strong> · MFA e identidades federadas</li>
+              <li><strong>C-004</strong> · acceso contextual con IAP</li>
+              <li><strong>C-006</strong> · VPC Service Controls</li>
+            </ul>
+          </div>
+          <div class="card has-accent reveal" style="border-top: 3px solid var(--accent);">
+            <span class="badge accent">7 controles · I-001 → I-007</span>
+            <h3>Integridad</h3>
+            <ul class="minimal" style="margin-top: 0.6rem;">
+              <li><strong>I-001</strong> · inventario automático de activos</li>
+              <li><strong>I-002</strong> · firmas SHA-256 de snapshots</li>
+              <li><strong>I-003</strong> · logs inmutables Bucket Lock</li>
+              <li><strong>I-006</strong> · firma de imágenes GKE</li>
+            </ul>
+          </div>
+          <div class="card reveal" style="border-top: 3px solid var(--ink-3);">
+            <span class="badge">7 controles · P-001 → P-007</span>
+            <h3>Privacidad</h3>
+            <ul class="minimal" style="margin-top: 0.6rem;">
+              <li><strong>P-001</strong> · clasificación Cloud SDP</li>
+              <li><strong>P-002</strong> · minimización por finalidad</li>
+              <li><strong>P-003</strong> · enmascaramiento BigQuery</li>
+              <li><strong>P-006/07</strong> · consentimiento y PIA</li>
+            </ul>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 5 — Diseño · §5.4 · Anexo G — catálogo
+          completo de controles con criterio de aceptación
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         19 — PIA EN SIETE BLOQUES
+         ============================================================ -->
+    <section class="slide" data-slide="19">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">19 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Diseño · análisis de impacto a la privacidad</div>
+        <h2 class="slide-title reveal">
+          PIA del clasificador — <span class="accent-word">siete bloques</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-2">
+          <div class="reveal">
+            <p class="lead">
+              El PIA evalúa el tratamiento automatizado de PII por el
+              clasificador NLP/IA y establece medidas para neutralizar
+              riesgos antes del despliegue productivo.
+            </p>
+            <div class="card has-accent" style="margin-top: 1.2rem;">
+              <h3>Art. 22 LGPDPPSO · validación humana</h3>
+              <p>
+                Las decisiones automatizadas deben ser explicables. El
+                <strong>Analista</strong> de PICIS interviene como validación
+                humana significativa antes de consolidar cualquier incidente.
+                El esquema preserva esta intervención y la trazabiliza con
+                Audit Logs.
+              </p>
+            </div>
+          </div>
+          <div class="reveal">
+            <ol style="list-style: none; counter-reset: bl; display: grid; gap: 0.55rem;">
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem; counter-increment: bl;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-01</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Descripción del tratamiento — flujo del pipeline</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-02</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Categorías de datos — niveles N1-N4</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-03</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Actores y encargados — Google Cloud bajo art. 52 Reglamento</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-04</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Finalidad y base jurídica</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-05</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Riesgos a derechos y libertades — siete riesgos (R1-R7)</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-06</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Controles mitigantes — del catálogo</span>
+              </li>
+              <li style="display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.7rem;">
+                <span class="mono" style="color: var(--accent); font-size: var(--small-size);">B-07</span>
+                <span style="font-size: var(--small-size); line-height: 1.4;">Decisión residual — riesgo medio, mitigar antes de producción</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1rem;">
+          Reporte técnico · Cap. 5 — Diseño · §5.5 · Anexo F — PIA del
+          módulo de clasificación NLP/IA
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         20 — CONCLUSIONES
+         ============================================================ -->
+    <section class="slide" data-slide="20">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">20 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Conclusiones</div>
+        <h2 class="slide-title reveal">
+          TT1 entrega un esquema <span class="accent-word">verificable</span>, no una intención
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <div class="grid-2" style="margin-top: 0.4rem;">
+          <ul class="minimal reveal">
+            <li>
+              <strong>OP-1 cumplido</strong> — brecha caracterizada con cada
+              activo trazado a un control existente y un control objetivo.
+            </li>
+            <li>
+              <strong>OP-2 cumplido</strong> — 22 controles diseñados y mapeados
+              a las subcategorías aplicables del NIST CSF 2.0.
+            </li>
+            <li>
+              <strong>OP-3 cumplido</strong> — conformidad normativa trazada
+              artículo ↔ control sobre LFPDPPP, Reglamento y LGPDPPSO.
+            </li>
+            <li>
+              <strong>PIA en siete bloques</strong> — entregado para el módulo
+              de clasificación NLP/IA con decisión residual documentada.
+            </li>
+          </ul>
+          <div class="reveal">
+            <div class="quote-block" style="font-size: 0.9em;">
+              <p style="font-size: clamp(1rem, 1.4vw, 1.35rem); line-height: 1.55;">
+                El valor del TT1 no es haber elegido GCP; es haber producido un
+                documento técnico donde <em>cualquier control</em> se puede
+                trazar al artículo legal que lo exige y a la subcategoría NIST
+                que lo norma — y viceversa.
+              </p>
+              <cite>Síntesis del Cap. 7 — Conclusiones</cite>
+            </div>
+          </div>
+        </div>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 7 — Conclusiones TT1
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         21 — TRABAJO A FUTURO (TT2)
+         ============================================================ -->
+    <section class="slide" data-slide="21">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">21 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Trabajo a futuro</div>
+        <h2 class="slide-title reveal">
+          TT2 — del diseño a la <span class="accent-word">demostración</span> operativa
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+        <ul class="minimal reveal" style="margin-top: 0.4rem;">
+          <li>
+            <strong>Aprovisionamiento declarativo</strong> del proyecto
+            productivo en GCP — scripts reproducibles que el equipo o un
+            tercero pueden ejecutar y obtener el mismo entorno.
+          </li>
+          <li>
+            <strong>Matriz de pruebas</strong> con un caso por control,
+            criterio numérico de aceptación y evidencia de ejecución
+            (cumplimiento del OP-4).
+          </li>
+          <li>
+            <strong>Validación operativa</strong> del clasificador NLP/IA
+            con F<sub>β=2</sub> como criterio de aceptación. Ponderación
+            favorable al recall.
+          </li>
+          <li>
+            <strong>Auditoría inversa</strong> — verificar que cada artículo
+            legal aplicable es satisfecho por al menos un control con
+            evidencia material.
+          </li>
+        </ul>
+        <p class="ref reveal" style="margin-top: 1.4rem;">
+          Reporte técnico · Cap. 7 — Trabajo a futuro · Anexo J — plan de
+          pruebas preliminar
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Defensa TT1 · 26 may 2026</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         22 — GRACIAS
+         ============================================================ -->
+    <section class="slide thanks" data-slide="22">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count">22 / 22</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal" style="margin-bottom: 1.4rem;">
+          <img
+            src="assets/img/logo-ipn.png"
+            alt="IPN"
+            style="height: clamp(2.4rem, 3vw, 3rem); margin-right: 1.4rem;"
+          />
+          <img
+            src="assets/img/logo-escom.png"
+            alt="ESCOM"
+            style="height: clamp(2.4rem, 3vw, 3rem);"
+          />
+        </div>
+        <div class="eyebrow reveal" style="color: var(--ink-mute);">
+          Defensa TT1 · 26 de mayo de 2026
+        </div>
+        <h2 class="reveal">
+          Gracias por su <em>atención</em>.
+        </h2>
+        <div class="slide-rule reveal" aria-hidden="true" style="margin-inline: auto;"></div>
+        <p
+          class="reveal"
+          style="
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: clamp(1.1rem, 1.5vw, 1.45rem);
+            color: var(--ink-1);
+            max-width: 30ch;
+            line-height: 1.35;
+            margin-top: 0.4rem;
+          "
+        >
+          Esquema preventivo de privacidad para PICIS en la versión de nube
+          basado en la arquitectura Zero Trust
+        </p>
+        <div class="meta reveal">
+          <strong style="color: var(--ink-1); font-weight: 500; letter-spacing: 0.06em; font-size: 0.78em; text-transform: uppercase;">Equipo</strong><br />
+          Francisco López Carlos Uriel · Leyva García Diego Alejandro · Romero Carreón Miguel Arturo<br />
+          <br />
+          <strong style="color: var(--ink-1); font-weight: 500; letter-spacing: 0.06em; font-size: 0.78em; text-transform: uppercase;">Directores</strong><br />
+          Dra. Cortez Duarte Nidia Asunción · Dr. Aguirre Anaya Eleazar<br />
+          <br />
+          <strong style="color: var(--ink-1); font-weight: 500; letter-spacing: 0.06em; font-size: 0.78em; text-transform: uppercase;">Sinodales</strong><br />
+          Dr. Cruz Torres Benjamín · M. en C. Flores Estrada Iturriel Enrique · M. en C. Cruz García Daniel<br />
+          <br />
+          <strong style="color: var(--ink-1); font-weight: 500; letter-spacing: 0.06em; font-size: 0.78em; text-transform: uppercase;">Seguimiento</strong> Dra. Morales Rodríguez Ursula Samantha<br />
+          <br />
+          Trabajo Terminal <strong style="font-family: var(--font-mono); font-weight: 500;">2026-B182</strong>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      /* ===========================================
+         SLIDE PRESENTATION CONTROLLER
+         Maneja navegación con teclado, scroll-snap,
+         intersection observer para animaciones, barra
+         de progreso, fullscreen y blank.
+         =========================================== */
+      class SlidePresentation {
+        constructor() {
+          this.slides = Array.from(document.querySelectorAll(".slide"));
+          this.total = this.slides.length;
+          this.current = 0;
+          this.progressBar = document.getElementById("progressBar");
+
+          this.setupIntersectionObserver();
+          this.setupKeyboardNav();
+          this.setupTouchNav();
+          this.updateProgress();
+          this.scrollToCurrent(true);
+        }
+
+        setupIntersectionObserver() {
+          // El IntersectionObserver añade .visible cuando un slide entra en
+          // viewport. Esto dispara las animaciones CSS .reveal y la barra
+          // ámbar del subtítulo.
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.intersectionRatio > 0.5) {
+                  entry.target.classList.add("visible");
+                  this.current = this.slides.indexOf(entry.target);
+                  this.updateProgress();
+                }
+              });
+            },
+            { threshold: [0.5] }
+          );
+          this.slides.forEach((s) => observer.observe(s));
+        }
+
+        setupKeyboardNav() {
+          document.addEventListener("keydown", (e) => {
+            const t = e.target;
+            if (
+              t &&
+              (t.tagName === "INPUT" ||
+                t.tagName === "TEXTAREA" ||
+                t.isContentEditable)
+            )
+              return;
+            switch (e.key) {
+              case "ArrowRight":
+              case "ArrowDown":
+              case "PageDown":
+                e.preventDefault();
+                this.next();
+                break;
+              case " ":
+                e.preventDefault();
+                e.shiftKey ? this.prev() : this.next();
+                break;
+              case "ArrowLeft":
+              case "ArrowUp":
+              case "PageUp":
+                e.preventDefault();
+                this.prev();
+                break;
+              case "Home":
+                e.preventDefault();
+                this.goto(0);
+                break;
+              case "End":
+                e.preventDefault();
+                this.goto(this.total - 1);
+                break;
+              case "f":
+              case "F":
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  this.toggleFullscreen();
+                }
+                break;
+              case "b":
+              case "B":
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  document.body.classList.toggle("blanked");
+                }
+                break;
+              case "Escape":
+                document.body.classList.remove("blanked");
+                break;
+            }
+          });
+        }
+
+        setupTouchNav() {
+          let startY = 0;
+          let startX = 0;
+          document.addEventListener(
+            "touchstart",
+            (e) => {
+              startY = e.touches[0].clientY;
+              startX = e.touches[0].clientX;
+            },
+            { passive: true }
+          );
+          document.addEventListener(
+            "touchend",
+            (e) => {
+              const dy = e.changedTouches[0].clientY - startY;
+              const dx = e.changedTouches[0].clientX - startX;
+              if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 60) {
+                dy < 0 ? this.next() : this.prev();
+              } else if (Math.abs(dx) > 60) {
+                dx < 0 ? this.next() : this.prev();
+              }
+            },
+            { passive: true }
+          );
+        }
+
+        next() {
+          this.goto(Math.min(this.current + 1, this.total - 1));
+        }
+        prev() {
+          this.goto(Math.max(this.current - 1, 0));
+        }
+        goto(i) {
+          this.current = i;
+          this.scrollToCurrent();
+        }
+        scrollToCurrent(instant = false) {
+          this.slides[this.current].scrollIntoView({
+            behavior: instant ? "auto" : "smooth",
+            block: "start",
+          });
+          this.updateProgress();
+        }
+
+        updateProgress() {
+          const pct = ((this.current + 1) / this.total) * 100;
+          this.progressBar.style.width = pct + "%";
+        }
+
+        toggleFullscreen() {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        new SlidePresentation();
+        // Marca el primer slide como visible para arrancar la animación de entrada
+        document.querySelector(".slide").classList.add("visible");
+      });
+    </script>
+  </body>
+</html>
