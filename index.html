@@ -2669,14 +2669,7 @@
             </div>
 
             <!-- · COLUMNA CENTRO — sistema PICIS · -->
-            <div class="c4-stack" style="position: relative;">
-              <!-- Etiquetas de flechas entrantes desde la izquierda -->
-              <div style="position: absolute; left: -1rem; top: 12%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--ink-3); text-align: right; line-height: 1.3; width: 6rem; pointer-events: none;">
-                configura<br/>y mantiene<br/><span style="color: var(--ink-mute);">⟶</span>
-              </div>
-              <div style="position: absolute; left: -1rem; top: 62%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--accent); text-align: right; line-height: 1.3; width: 6rem; pointer-events: none;">
-                opera · valida<br/>lectura ejecutiva<br/><span>⟶</span>
-              </div>
+            <div class="c4-stack">
               <div class="c4-system accent">
                 <strong style="font-size: 0.95rem;">PICIS en GCP bajo Zero Trust</strong>
                 <small>Plataforma de Identificación, Clasificación y Monitoreo de Información Sensible</small>
@@ -2699,14 +2692,7 @@
             </div>
 
             <!-- · COLUMNA DERECHA — servicios GCP + externo · -->
-            <div class="c4-stack" style="position: relative;">
-              <!-- Etiquetas de flechas hacia PICIS y hacia portales -->
-              <div style="position: absolute; left: -1.2rem; top: 16%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--ink-3); text-align: left; line-height: 1.3; width: 6rem; pointer-events: none;">
-                <span style="color: var(--ink-mute);">⟵</span><br/>federa<br/>identidades · MFA
-              </div>
-              <div style="position: absolute; left: -1.2rem; top: 78%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--accent); text-align: left; line-height: 1.3; width: 6rem; pointer-events: none;">
-                <span>⟶</span><br/>scraping<br/>autorizado
-              </div>
+            <div class="c4-stack">
               <div>
                 <div class="c4-section-title">Servicios gestionados de GCP</div>
                 <div class="c4-stack" style="gap: 0.6rem;">
@@ -2733,6 +2719,15 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Mini-leyenda de flujo: cómo se leen las relaciones del diagrama -->
+          <div style="background: var(--paper-1); border: 1px solid var(--rule); border-radius: 6px; padding: 0.7rem 0.9rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--ink-body); line-height: 1.6; display: grid; gap: 0.25rem;">
+            <div style="font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-mute); margin-bottom: 0.2rem;">Cómo se lee este diagrama</div>
+            <div><strong style="color: var(--ink-3);">Grupo técnico</strong>  →  configura y mantiene  →  <strong style="color: var(--ink-1);">PICIS</strong></div>
+            <div><strong style="color: var(--ink-3);">Grupo operativo</strong>  →  opera, valida hallazgos y consume reportes  →  <strong style="color: var(--ink-1);">PICIS</strong></div>
+            <div><strong style="color: var(--ink-1);">PICIS</strong>  ←  federa identidades con MFA  ←  <strong style="color: var(--ink-2);">Cloud Identity</strong>  ·  preclasifica con  <strong style="color: var(--ink-2);">Sensitive Data Protection</strong></div>
+            <div><strong style="color: var(--ink-1);">PICIS</strong>  →  <span style="color: var(--accent);">scraping autorizado del dominio base</span>  →  <strong style="color: var(--ink-mute);">Portales institucionales</strong></div>
           </div>
 
           <div class="c4-note">
