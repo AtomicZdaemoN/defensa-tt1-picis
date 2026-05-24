@@ -1,0 +1,63 @@
+name: Build PDF
+
+# Regenera tt1-defensa.pdf cada vez que cambia el deck o sus assets, y hace
+# commit del PDF de vuelta al repo. Filtramos por path para no entrar en
+# loop con el propio commit del PDF.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "assets/**"
+      - "scripts/export-pdf.mjs"
+      - "package.json"
+      - ".github/workflows/build-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-pdf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache npm + Playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pdf-${{ hashFiles('package.json') }}
+
+      - name: Install dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Generate PDF
+        run: node scripts/export-pdf.mjs tt1-defensa.pdf
+
+      - name: Commit updated PDF if it changed
+        run: |
+          if git diff --quiet tt1-defensa.pdf; then
+            echo "PDF sin cambios — no se hace commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add tt1-defensa.pdf
+            git commit -m "chore(pdf): regenerar desde index.html [skip ci]"
+            git push
+          fi
