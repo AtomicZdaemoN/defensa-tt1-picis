@@ -1,0 +1,15 @@
+{
+  "name": "defensa-tt1-picis",
+  "version": "1.0.0",
+  "description": "Deck HTML + PDF exporter para la defensa de TT1 — TT 2026-B182",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "pdf": "node scripts/export-pdf.mjs",
+    "serve": "python3 -m http.server 8731"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.50.0"
+  }
+}

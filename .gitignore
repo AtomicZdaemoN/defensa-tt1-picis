@@ -1,0 +1,6 @@
+# Dependencias instaladas por npm
+node_modules/
+package-lock.json
+
+# Cache local
+.playwright/

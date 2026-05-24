@@ -5,23 +5,19 @@ Presentación HTML para la defensa del Trabajo Terminal **2026-B182**
 basado en la arquitectura Zero Trust* — defensa el **26 de mayo de
 2026**.
 
-Archivo único `index.html`, sin dependencias de build. Construida con
-las skills `frontend-slides` (Zara Zhang) e `impeccable` siguiendo la
-estructura sugerida por la Dra. Nidia Asunción Cortez Duarte. Sólo
+Archivo único `index.html`, sin dependencias de build. Sólo
 contenido del **reporte técnico** y los **anexos** del TT.
 
-## Cómo servirla
+## URLs públicos
+
+- **Deck (recomendado para los sinodales):** https://atomiczdaemon.github.io/defensa-tt1-picis/
+- **PDF estático:** https://atomiczdaemon.github.io/defensa-tt1-picis/tt1-defensa.pdf
+
+## Servir local
 
 ```bash
-# desde la raíz del repositorio
-python3 -m http.server 8731 --directory presentacion
+python3 -m http.server 8731
 # abrir http://localhost:8731 en Chrome
-```
-
-Alternativa con Node:
-
-```bash
-npx serve presentacion -p 8731
 ```
 
 ## Atajos del deck
@@ -35,89 +31,97 @@ npx serve presentacion -p 8731
 | `b` | Blank (pantalla negra) — útil cuando el sinodal pregunta algo |
 | `Esc` | Salir del modo blank |
 
-Soporta clicker estándar (los botones de avanzar/retroceder mapean a
-`PgDn` / `PgUp`). También funcionan los swipes en pantallas táctiles.
+Soporta clicker estándar (los botones de avanzar/retroceder mapean
+a `PgDn` / `PgUp`). También funcionan los swipes en pantallas
+táctiles.
 
-## Estructura de las 22 diapositivas
+## Regenerar el PDF
 
-| # | Slide | Insumo del reporte |
-|---|---|---|
-| 01 | Portada | Cap. 0 — Portada |
-| 02 | Introducción | Cap. 0 — Introducción |
-| 03 | Problemática | Cap. 1 — Antecedentes |
-| 04 | Objetivo general | Cap. 1 §1.5 — cita verbatim |
-| 05 | Objetivos particulares | Cap. 1 §1.5 — cita verbatim |
-| 06 | Estado del arte | Cap. 2 + Anexo H |
-| 07 | Marco teórico — NIST | Cap. 3 §3.1-3.4 |
-| 08 | Marco teórico — Legislación MX | Cap. 3 §3.5-3.9 + Anexo E |
-| 09 | Marco teórico — F<sub>β=2</sub> | Cap. 3 §3.10 |
-| 10 | Herramientas tecnológicas | Cap. 4 §4.3 + Anexo B |
-| 11 | Metodología | Cap. 4 §4.1 |
-| 12 | Análisis (brecha) | Cap. 4 §4.2 + Anexo I |
-| 13 | Requisitos F y NF | Cap. 4 §4.4-4.5 + Anexo A |
-| 14 | C1 Contexto | Cap. 5 + `c1-contexto.png` |
-| 15 | C2 Contenedores | Cap. 5 + `c2-contenedores.png` |
-| 16 | Flujo Zero Trust (11 pasos) | Cap. 5 §5.3 |
-| 17 | C3 Clasificador NLP/IA | Cap. 5 + `c3-clasificador.png` |
-| 18 | Catálogo de 22 controles | Cap. 5 §5.4 + Anexo G |
-| 19 | PIA en siete bloques | Cap. 5 §5.5 + Anexo F |
-| 20 | Conclusiones | Cap. 7 |
-| 21 | Trabajo a futuro (TT2) | Cap. 7 + Anexo J |
-| 22 | Gracias por su atención | — |
+### Automático — GitHub Actions
 
-Duración objetivo: **20 minutos** (≈ 55 s por slide en promedio).
-Slides hero como el 16 (flujo Zero Trust) y los diagramas C1/C2/C3
-sostienen más narración (1.5-2 min).
+Cada vez que se hace push a `main` con cambios en `index.html`, `assets/`
+o `scripts/export-pdf.mjs`, el workflow [`Build PDF`](.github/workflows/build-pdf.yml)
+captura las 26 slides en 1920×1080 y comitea el `tt1-defensa.pdf`
+actualizado de vuelta al repo. El commit lleva `[skip ci]` para no
+disparar el workflow en loop.
 
-## Reglas de contenido (heredadas del reporte aprobado)
+También se puede correr a mano:
+
+```bash
+gh workflow run build-pdf.yml --repo AtomicZdaemoN/defensa-tt1-picis
+```
+
+### Local
+
+```bash
+npm install
+npx playwright install chromium   # la primera vez
+npm run pdf
+```
+
+El PDF queda en `tt1-defensa.pdf` en la raíz. El script levanta un
+servidor estático efímero en el puerto 8742, recorre cada slide y
+hace `merge` de los 26 PDFs de una página con `pdf-lib`.
+
+## Estructura del repositorio
+
+```
+defensa-tt1-picis/
+├── index.html              # deck completo, autocontenido (CSS + JS inline)
+├── tt1-defensa.pdf         # PDF estático regenerado por GitHub Actions
+├── assets/
+│   └── img/                # 4 diagramas C4 (PNG) + logos IPN/ESCOM
+├── scripts/
+│   └── export-pdf.mjs      # generador del PDF
+├── .github/
+│   └── workflows/
+│       └── build-pdf.yml   # pipeline automático
+├── package.json            # dependencias del exportador
+└── README.md
+```
+
+## Reglas de contenido (heredadas del reporte técnico)
 
 1. Sin mención de OEA como financiador.
-2. Sin métricas porcentuales no respaldadas. Cobertura se expresa
-   como *"cada subcategoría / artículo aplicable cuente con al menos
-   un control asociado"*.
+2. Sin métricas porcentuales no respaldadas — la cobertura se
+   expresa como *"cada subcategoría / artículo aplicable cuente con
+   al menos un control asociado"*.
 3. *Perímetro* siempre como **perímetro lógico** — no de red.
 4. **5 roles** en PICIS, no 7 (Administrador, Coordinador,
    Supervisor, Analista, Responsable).
 5. Nombres formales completos de los directores.
 6. Objetivo general y 4 OPs citados verbatim del protocolo.
 7. F<sub>β</sub> con β = 2 — la fórmula completa renderizada en HTML.
-8. Los 11 pasos del flujo Zero Trust **coinciden exactamente** con
-   `docs/arquitectura/img/c2-zt-autorizacion.png`.
+8. Los 11 pasos del flujo Zero Trust coinciden exactamente con
+   `assets/img/c2-zt-autorizacion.png`.
 
-## Diseño visual
+## Estructura narrativa — 26 diapositivas
 
-- **Fondo papel cremoso** `#FAF8F3` (no blanco puro, no navy oscuro).
-- **Tinta** navy `#0B2545` para títulos y `#1F2937` para cuerpo.
-- **Acento único** ámbar `#C97B22` — usado escasamente.
-- **Tipografía:** Fraunces (display serif), IBM Plex Sans (cuerpo),
-  IBM Plex Mono (códigos, IDs, ref).
-- **Animaciones:** fade + slide-up al entrar al slide. Subrayado
-  ámbar que se dibuja sólo. Respeta `prefers-reduced-motion: reduce`.
-- **Hover:** NO crítico — la presentación funciona idéntica con
-  clicker. Los acentos animados se disparan al entrar al slide, no
-  al pasar el mouse.
-
-## Compatibilidad
-
-- **Chrome 120+ / Edge 120+** — target principal.
-- **Safari 17+** — funciona, pero el snap puede ir más áspero.
-- **Firefox 121+** — funciona.
-
-Probada en 1366×768, 1728×1117 (Mac 16″) y 1920×1080.
-
-## Export a PDF (respaldo)
-
-```bash
-./scripts/export-pdf.sh
-# genera dist/tt1-defensa.pdf
-```
-
-Requiere `npm i playwright pdf-lib` la primera vez. Si Playwright no
-está instalado, el script lo agrega.
-
-## Fuente única de verdad
-
-Todo lo que esta presentación afirma puede rastrearse al **reporte
-técnico** (`docs/reporte-tecnico/dist-latex/`) y a los **anexos**
-(`evidencias/anexo-*.pdf`). Si algo en este deck no aparece en esos
-documentos, es un error y debe corregirse.
+| # | Sección | Slide |
+|---|---|---|
+| 01 | Portada | — |
+| 02 | Introducción divulgativa | Datos sensibles publicados por error |
+| 03 | Contexto · 01 | ¿Qué entendemos por dato personal? |
+| 04 | Contexto · 02 | Marco legal mexicano + IPN sujeto obligado |
+| 05 | Contexto · 03 | Origen de PICIS · v1 on-premise |
+| 06 | Contexto · 04 | De PICIS v1 a v2 · seguridad desde el diseño |
+| 07 | Problemática | Migrar a la nube disuelve tres garantías |
+| 08 | Objetivo general | Cita verbatim del protocolo |
+| 09 | Objetivos particulares | OP-1 a OP-4 verbatim |
+| 10 | Estado del arte | 23 trabajos en 6 ejes — tabla resumen |
+| 11 | Marco teórico · NIST | 4 marcos (CSF, Privacy, 800-53, ZT) |
+| 12 | Marco teórico · Legislación MX | LFPDPPP · Reglamento · LGPDPPSO |
+| 13 | Marco teórico · F<sub>β=2</sub> | Métrica del clasificador (TT2) |
+| 14 | Herramientas tecnológicas | Tabla comparativa AWS / Azure / GCP |
+| 15 | Metodología | 5 etapas — 4 cierran TT1 |
+| 16 | Análisis · brecha | Tabla activo / control existente / control objetivo |
+| 17 | Requisitos | 12 RF + 10 RNF |
+| 18 | Diseño · C1 | Contexto |
+| 19 | Diseño · C2 | Contenedores |
+| 20 | Diseño · Zero Trust | Flujo de autorización en 11 pasos |
+| 21 | Diseño · C3 | Clasificador NLP/IA |
+| 22 | Catálogo de 22 controles | 8 C + 7 I + 7 P |
+| 23 | PIA en siete bloques | Análisis de impacto a la privacidad |
+| 24 | Conclusiones | OP-1, OP-2, OP-3 cerrados |
+| 25 | Trabajo a futuro | TT2 — validación operativa (OP-4) |
+| 26 | Gracias por su atención | — |
