@@ -648,11 +648,33 @@
       .zt-flow {
         background: #ffffff;
         border: 1px solid var(--rule);
+        border-radius: 6px;
         padding: clamp(1rem, 1.4vw, 1.4rem);
         display: grid;
         grid-template-rows: auto 1fr auto;
         gap: clamp(0.6rem, 1vw, 1rem);
+        position: relative;
+        cursor: zoom-in;
+        transition: box-shadow 200ms ease-out;
       }
+      .zt-flow:hover { box-shadow: 0 6px 18px rgba(11, 37, 69, 0.08); }
+      .zt-flow::after {
+        content: "⤢  click o Z para ampliar";
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.6rem;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        color: var(--ink-mute);
+        background: var(--paper-1);
+        padding: 0.15rem 0.5rem;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        opacity: 0.5;
+        transition: opacity 200ms;
+        pointer-events: none;
+      }
+      .zt-flow:hover::after { opacity: 1; }
       .zt-flow .planes {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -666,18 +688,19 @@
         letter-spacing: 0.12em;
         color: var(--ink-mute);
         padding: 0.35rem 0;
-        border-right: 1px solid var(--rule-soft);
+        border-right: 1px dashed var(--rule);
         padding-right: 0.9rem;
         text-align: right;
       }
       .zt-row {
         display: flex;
-        gap: 0.6rem;
+        gap: 0.55rem;
         align-items: stretch;
       }
       .zt-node {
         background: var(--paper-1);
         border: 1px solid var(--rule);
+        border-radius: 6px;
         padding: 0.6rem 0.75rem;
         flex: 1;
         position: relative;
@@ -733,17 +756,132 @@
 
       /* ===========================================
          C4 DIAGRAM COMPONENTS — bloques semánticos
-         reutilizables para slides 18, 19 y 21.
+         reutilizables para slides 18, 19, 20 y 21.
+         Sistema visual unificado: bordes 6px, transiciones suaves,
+         tipografía Plex Sans, acento ámbar para núcleos.
          =========================================== */
       .c4-board {
         background: #ffffff;
         border: 1px solid var(--rule);
+        border-radius: 6px;
         padding: clamp(0.9rem, 1.2vw, 1.2rem);
         font-size: 0.72rem;
         line-height: 1.35;
         color: var(--ink-body);
         display: grid;
         gap: clamp(0.7rem, 1vw, 1rem);
+        cursor: zoom-in;
+        transition: box-shadow 200ms ease-out, transform 200ms ease-out;
+      }
+      .c4-board:hover {
+        box-shadow: 0 6px 18px rgba(11, 37, 69, 0.08);
+      }
+      .c4-board::after {
+        content: "⤢  click o Z para ampliar";
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.6rem;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        color: var(--ink-mute);
+        background: var(--paper-1);
+        padding: 0.15rem 0.5rem;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        opacity: 0.5;
+        transition: opacity 200ms;
+        pointer-events: none;
+      }
+      .c4-board:hover::after {
+        opacity: 1;
+      }
+      .slide-content { position: relative; }
+
+      /* Modal de zoom — se activa con .diagram-modal-open en <body>  */
+      .diagram-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 37, 69, 0.88);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1500;
+        padding: clamp(1.5rem, 3vw, 3rem);
+        cursor: zoom-out;
+        animation: diagram-fade 200ms ease-out;
+      }
+      body.diagram-modal-open .diagram-modal { display: flex; }
+      @keyframes diagram-fade {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+      .diagram-modal-content {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: clamp(1.5rem, 2.5vw, 2.5rem);
+        max-width: 96vw;
+        max-height: 92vh;
+        overflow: auto;
+        position: relative;
+        cursor: default;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .diagram-modal-close {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.9rem;
+        background: var(--paper-2);
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        padding: 0.3rem 0.7rem;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--ink-soft);
+        cursor: pointer;
+        z-index: 10;
+      }
+      .diagram-modal-close:hover { background: var(--paper-3); }
+      /* Asegurar que cualquier .reveal clonado al modal se muestre sin
+       * depender del IntersectionObserver del slide original. */
+      .diagram-modal-content .reveal,
+      .diagram-modal-content .slide-rule {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
+      .diagram-modal-content > .c4-board,
+      .diagram-modal-content > .zt-flow {
+        cursor: default;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        border: 0;
+        padding: 0;
+      }
+      .diagram-modal-content > .c4-board::after,
+      .diagram-modal-content > .zt-flow::after { display: none; }
+      .diagram-modal-content > .c4-board:hover,
+      .diagram-modal-content > .zt-flow:hover { box-shadow: none; }
+      /* En modal, los componentes crecen un poco para ser legibles */
+      .diagram-modal-content .c4-component,
+      .diagram-modal-content .c4-actor,
+      .diagram-modal-content .c4-system,
+      .diagram-modal-content .c4-step,
+      .diagram-modal-content .zt-node {
+        font-size: 0.9rem;
+      }
+      .diagram-modal-content .c4-component small,
+      .diagram-modal-content .c4-actor small,
+      .diagram-modal-content .c4-system small,
+      .diagram-modal-content .c4-step small,
+      .diagram-modal-content .zt-node small {
+        font-size: 0.75rem;
+      }
+      .diagram-modal-content .c4-component strong,
+      .diagram-modal-content .c4-actor strong,
+      .diagram-modal-content .c4-step strong,
+      .diagram-modal-content .zt-node strong {
+        font-size: 1rem;
       }
 
       /* Plano lógico — caja con borde discontinuo y label superior */
@@ -751,7 +889,7 @@
         position: relative;
         padding: 1rem 0.85rem 0.75rem 0.85rem;
         border: 1px dashed var(--rule);
-        border-radius: 4px;
+        border-radius: 6px;
       }
       .c4-plane > .c4-plane-label {
         position: absolute;
@@ -794,8 +932,14 @@
       .c4-system {
         background: #ffffff;
         border: 2px solid var(--ink-1);
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 0.65rem 0.8rem;
+        text-align: center;
+      }
+      .c4-system > * { text-align: left; }
+      .c4-system > strong, .c4-system > small {
+        text-align: center;
+        display: block;
       }
       .c4-system.accent {
         background: var(--accent-tint);
@@ -818,7 +962,7 @@
       .c4-component {
         background: var(--paper-1);
         border: 1px dashed var(--ink-2);
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 0.45rem 0.6rem;
         font-size: 0.7rem;
       }
@@ -985,10 +1129,10 @@
         position: relative;
         background: #ffffff;
         border: 1.5px solid var(--ink-2);
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 0.6rem 0.65rem;
       }
-      .c4-step.core { border-width: 2.5px; border-color: var(--ink-1); background: var(--accent-tint); }
+      .c4-step.core { border-width: 2.5px; border-color: var(--accent); background: var(--accent-tint); }
       .c4-step .step-n {
         font-family: var(--font-mono);
         font-size: 0.58rem;
@@ -1010,17 +1154,22 @@
         color: var(--ink-body);
         line-height: 1.3;
       }
+      .c4-pipeline { position: relative; }
       .c4-step:not(:last-child)::after {
-        content: "▸";
+        content: "";
         position: absolute;
-        right: -0.55rem;
+        right: -0.45rem;
         top: 50%;
+        width: 0;
+        height: 0;
         transform: translateY(-50%);
-        font-size: 0.95rem;
-        color: var(--ink-mute);
-        z-index: 1;
-        background: var(--paper-1);
-        padding: 0 0.05rem;
+        border-left: 8px solid var(--ink-2);
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        z-index: 2;
+      }
+      .c4-step.core:not(:last-child)::after {
+        border-left-color: var(--accent);
       }
 
       /* Pequeño título de columna o sección dentro de un board */
@@ -2482,10 +2631,10 @@
         <div class="slide-rule" aria-hidden="true"></div>
 
         <div class="reveal c4-board" style="margin-top: 0.4rem;">
-          <div class="c4-cols-3">
+          <div class="c4-cols-3" style="position: relative;">
 
             <!-- · COLUMNA IZQUIERDA — actores agrupados · -->
-            <div class="c4-stack">
+            <div class="c4-stack" style="position: relative;">
               <div class="c4-plane">
                 <span class="c4-plane-label">Grupo técnico · IPN</span>
                 <div class="c4-stack" style="gap: 0.4rem;">
@@ -2520,7 +2669,14 @@
             </div>
 
             <!-- · COLUMNA CENTRO — sistema PICIS · -->
-            <div class="c4-stack">
+            <div class="c4-stack" style="position: relative;">
+              <!-- Etiquetas de flechas entrantes desde la izquierda -->
+              <div style="position: absolute; left: -1rem; top: 12%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--ink-3); text-align: right; line-height: 1.3; width: 6rem; pointer-events: none;">
+                configura<br/>y mantiene<br/><span style="color: var(--ink-mute);">⟶</span>
+              </div>
+              <div style="position: absolute; left: -1rem; top: 62%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--accent); text-align: right; line-height: 1.3; width: 6rem; pointer-events: none;">
+                opera · valida<br/>lectura ejecutiva<br/><span>⟶</span>
+              </div>
               <div class="c4-system accent">
                 <strong style="font-size: 0.95rem;">PICIS en GCP bajo Zero Trust</strong>
                 <small>Plataforma de Identificación, Clasificación y Monitoreo de Información Sensible</small>
@@ -2543,7 +2699,14 @@
             </div>
 
             <!-- · COLUMNA DERECHA — servicios GCP + externo · -->
-            <div class="c4-stack">
+            <div class="c4-stack" style="position: relative;">
+              <!-- Etiquetas de flechas hacia PICIS y hacia portales -->
+              <div style="position: absolute; left: -1.2rem; top: 16%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--ink-3); text-align: left; line-height: 1.3; width: 6rem; pointer-events: none;">
+                <span style="color: var(--ink-mute);">⟵</span><br/>federa<br/>identidades · MFA
+              </div>
+              <div style="position: absolute; left: -1.2rem; top: 78%; transform: translateX(-100%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--accent); text-align: left; line-height: 1.3; width: 6rem; pointer-events: none;">
+                <span>⟶</span><br/>scraping<br/>autorizado
+              </div>
               <div>
                 <div class="c4-section-title">Servicios gestionados de GCP</div>
                 <div class="c4-stack" style="gap: 0.6rem;">
@@ -2605,7 +2768,7 @@
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
 
-        <div class="reveal c4-board" style="margin-top: 0.4rem; gap: 0.55rem; font-size: 0.68rem;">
+        <div class="reveal c4-board" style="margin-top: 0.4rem; gap: 0.45rem; font-size: 0.68rem;">
           <!-- · Plano de ingreso · -->
           <div class="c4-plane">
             <span class="c4-plane-label">1 · Plano de ingreso</span>
@@ -2614,6 +2777,11 @@
               <div class="c4-component"><strong>Identity-Aware Proxy</strong><small>Verificación de identidad por solicitud</small></div>
               <div class="c4-component"><strong>Access Context Manager</strong><small>Postura del dispositivo, red y horario</small></div>
             </div>
+          </div>
+
+          <!-- ↓ token autenticado -->
+          <div style="text-align: center; font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-mute); margin: -0.3rem 0;">
+            <span style="color: var(--ink-3); font-size: 0.85rem;">▼</span> token JWT firmado por IAP
           </div>
 
           <!-- · Plano de aplicación · GKE privado · -->
@@ -2629,6 +2797,11 @@
             </div>
           </div>
 
+          <!-- ↓ tokens corto-vivos -->
+          <div style="text-align: center; font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-mute); margin: -0.3rem 0;">
+            <span style="color: var(--ink-3); font-size: 0.85rem;">▼</span> Workload Identity Federation · token ≤ 1 h
+          </div>
+
           <!-- · Plano de datos · VPC SC · -->
           <div class="c4-plane">
             <span class="c4-plane-label">3 · Plano de datos · Perímetro VPC Service Controls</span>
@@ -2642,6 +2815,11 @@
                 <small>Documentos descargados y artefactos cifrados con CMEK</small>
               </div>
             </div>
+          </div>
+
+          <!-- los planos 4 y 5 son transversales — sostienen todos los anteriores -->
+          <div style="text-align: center; font-family: var(--font-mono); font-size: 0.6rem; color: var(--ink-mute); margin: -0.2rem 0;">
+            sostienen todos los planos anteriores ↓
           </div>
 
           <!-- · Plano de control + cadena de software combinados en 2 columnas · -->
@@ -2862,37 +3040,56 @@
             </div>
           </div>
 
-          <!-- Servicios alrededor -->
-          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem;">
-            <div class="c4-storage" style="margin-top: 0; max-width: none; min-height: 78px;">
-              <strong>Cloud Storage</strong>
-              <small>Documentos y derivados · CMEK</small>
-            </div>
-            <div class="c4-service-wrap" style="max-width: none;">
-              <div class="c4-service" style="min-height: 78px; padding: 0.55rem 0.7rem;">
-                <strong>Sensitive Data Protection</strong>
-                <small>Preclasificación PII opcional</small>
+          <!-- Servicios agrupados por rol — conectados al pipeline con etiquetas claras -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem;">
+
+            <div class="c4-plane">
+              <span class="c4-plane-label">Almacenamiento del pipeline</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;">
+                <div class="c4-storage" style="margin-top: 0.2rem; max-width: none; min-height: 76px; padding: 1rem 0.6rem 0.65rem;">
+                  <strong>Cloud Storage</strong>
+                  <small>Documentos y derivados · CMEK</small>
+                </div>
+                <div class="c4-storage" style="margin-top: 0.2rem; max-width: none; min-height: 76px; padding: 1rem 0.6rem 0.65rem;">
+                  <strong>BigQuery</strong>
+                  <small>Hallazgos · data masking por columna</small>
+                </div>
               </div>
+              <p class="c4-edge up" style="text-align: center; margin-top: 0.4rem;">lee y escribe (pasos 1, 4 y 5)</p>
             </div>
-            <div class="c4-storage" style="margin-top: 0; max-width: none; min-height: 78px;">
-              <strong>BigQuery</strong>
-              <small>Hallazgos · CMEK · data masking</small>
-            </div>
-            <div class="c4-storage" style="margin-top: 0; max-width: none; min-height: 78px;">
-              <strong>Cloud Logging</strong>
-              <small>Auditoría operativa de cada etapa</small>
-            </div>
-            <div class="c4-service-wrap" style="max-width: none;">
-              <div class="c4-service" style="min-height: 78px; padding: 0.55rem 0.7rem;">
-                <strong>Secret Manager</strong>
-                <small>Modelos, tokens y credenciales</small>
+
+            <div class="c4-plane">
+              <span class="c4-plane-label">Diálogo NLP — paso 4</span>
+              <div class="c4-service-wrap" style="max-width: none; margin: 0.3rem auto;">
+                <div class="c4-service" style="min-height: 78px; padding: 0.7rem 0.7rem;">
+                  <strong>Sensitive Data Protection</strong>
+                  <small>Preclasificación PII opcional · insumo, no veredicto</small>
+                </div>
               </div>
+              <p class="c4-edge up" style="text-align: center; margin-top: 0.5rem;">solicita inspección · recibe etiquetas</p>
             </div>
-            <div class="c4-service-wrap" style="max-width: none;">
-              <div class="c4-service" style="min-height: 78px; padding: 0.55rem 0.7rem;">
-                <strong>Cloud KMS</strong>
-                <small>CMEK · BigQuery y Cloud Storage</small>
+
+            <div class="c4-plane">
+              <span class="c4-plane-label">Control y auditoría</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem;">
+                <div class="c4-storage" style="margin-top: 0.2rem; max-width: none; min-height: 72px; padding: 0.95rem 0.45rem 0.6rem;">
+                  <strong style="font-size: 0.7rem;">Cloud Logging</strong>
+                  <small>Auditoría por etapa</small>
+                </div>
+                <div class="c4-service-wrap" style="max-width: none;">
+                  <div class="c4-service" style="min-height: 72px; padding: 0.45rem 0.45rem;">
+                    <strong style="font-size: 0.7rem;">Secret Manager</strong>
+                    <small>Modelos · tokens</small>
+                  </div>
+                </div>
+                <div class="c4-service-wrap" style="max-width: none;">
+                  <div class="c4-service" style="min-height: 72px; padding: 0.45rem 0.45rem;">
+                    <strong style="font-size: 0.7rem;">Cloud KMS</strong>
+                    <small>Provee CMEK</small>
+                  </div>
+                </div>
               </div>
+              <p class="c4-edge up" style="text-align: center; margin-top: 0.4rem;">cifra · audita · inyecta credenciales</p>
             </div>
           </div>
 
@@ -3227,8 +3424,60 @@
           this.setupIntersectionObserver();
           this.setupKeyboardNav();
           this.setupTouchNav();
+          this.setupDiagramZoom();
           this.updateProgress();
           this.scrollToCurrent(true);
+        }
+
+        /* Click sobre cualquier .c4-board o .zt-flow abre el diagrama en
+         * un modal a casi 100% del viewport. Esc o click en el fondo
+         * cierran. La tecla "z" abre el del slide actual. */
+        setupDiagramZoom() {
+          // Inyectar el contenedor del modal una sola vez
+          if (!document.getElementById("diagram-modal")) {
+            const modal = document.createElement("div");
+            modal.id = "diagram-modal";
+            modal.className = "diagram-modal";
+            modal.innerHTML =
+              '<div class="diagram-modal-content" id="diagram-modal-content"></div>';
+            document.body.appendChild(modal);
+
+            modal.addEventListener("click", (e) => {
+              if (e.target === modal) this.closeDiagramZoom();
+            });
+          }
+
+          // Listener delegado para diagramas
+          document.addEventListener("click", (e) => {
+            const target = e.target.closest(".c4-board, .zt-flow");
+            if (!target) return;
+            // No abrir si ya estamos dentro del modal
+            if (e.target.closest(".diagram-modal")) return;
+            // No abrir si el click vino de un elemento interactivo
+            if (e.target.closest("a, button, input, [contenteditable]")) return;
+            this.openDiagramZoom(target);
+          });
+        }
+
+        openDiagramZoom(diagram) {
+          const content = document.getElementById("diagram-modal-content");
+          if (!content) return;
+          // Clonar el diagrama para preservar el layout original del slide
+          const clone = diagram.cloneNode(true);
+          // Botón de cerrar
+          const close = document.createElement("button");
+          close.className = "diagram-modal-close";
+          close.textContent = "Esc · cerrar";
+          close.type = "button";
+          close.addEventListener("click", () => this.closeDiagramZoom());
+          content.innerHTML = "";
+          content.appendChild(close);
+          content.appendChild(clone);
+          document.body.classList.add("diagram-modal-open");
+        }
+
+        closeDiagramZoom() {
+          document.body.classList.remove("diagram-modal-open");
         }
 
         setupIntersectionObserver() {
@@ -3301,6 +3550,22 @@
                 break;
               case "Escape":
                 document.body.classList.remove("blanked");
+                if (document.body.classList.contains("diagram-modal-open")) {
+                  this.closeDiagramZoom();
+                }
+                break;
+              case "z":
+              case "Z":
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  if (document.body.classList.contains("diagram-modal-open")) {
+                    this.closeDiagramZoom();
+                  } else {
+                    const active = this.slides[this.current];
+                    const diag = active.querySelector(".c4-board, .zt-flow");
+                    if (diag) this.openDiagramZoom(diag);
+                  }
+                }
                 break;
             }
           });
