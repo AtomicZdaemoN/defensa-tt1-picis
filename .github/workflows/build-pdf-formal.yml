@@ -1,0 +1,112 @@
+name: Build PDF + Deploy Formal Variant
+
+# Regenera tt1-defensa-formal.pdf desde feat/presentacion-formal y despliega
+# la variante formal a main/formal/ para servirse en GitHub Pages.
+# NO sobreescribe la versión de producción en la raíz de main.
+
+on:
+  push:
+    branches: [feat/presentacion-formal]
+    paths:
+      - "index.html"
+      - "assets/**"
+      - "scripts/export-pdf.mjs"
+      - "package.json"
+      - ".github/workflows/build-pdf-formal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-pdf-formal-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # 1 — Checkout de la rama formal (fuente)
+      - name: Checkout feat/presentacion-formal
+        uses: actions/checkout@v4
+        with:
+          ref: feat/presentacion-formal
+          path: formal-src
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache npm + Playwright
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pdf-formal-${{ hashFiles('formal-src/package.json') }}
+
+      - name: Install dependencies
+        working-directory: formal-src
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      # 2 — Generar PDF formal
+      - name: Generate formal PDF
+        working-directory: formal-src
+        run: node scripts/export-pdf.mjs tt1-defensa-formal.pdf
+
+      # 3 — Commit del PDF de vuelta a feat/presentacion-formal
+      - name: Commit formal PDF to source branch
+        working-directory: formal-src
+        run: |
+          if git diff --quiet tt1-defensa-formal.pdf; then
+            echo "PDF sin cambios — no se hace commit a la rama formal."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add tt1-defensa-formal.pdf
+            git commit -m "chore(pdf): regenerar variante formal [skip ci]"
+            git push
+          fi
+
+      # 4 — Checkout de main (destino del despliegue)
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-deploy
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 5 — Copiar variante formal a main/formal/
+      - name: Deploy formal variant to main/formal/
+        run: |
+          mkdir -p main-deploy/formal
+
+          # Presentación HTML
+          cp formal-src/index.html main-deploy/formal/index.html
+
+          # Assets (imágenes, fuentes locales, etc.)
+          cp -r formal-src/assets main-deploy/formal/assets
+
+          # PDF formal
+          cp formal-src/tt1-defensa-formal.pdf main-deploy/formal/tt1-defensa-formal.pdf
+
+      # 6 — Commit a main con [skip ci] para no disparar el otro workflow
+      - name: Commit formal variant to main
+        working-directory: main-deploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add formal/
+
+          if git diff --cached --quiet; then
+            echo "Sin cambios en formal/ — no se hace commit a main."
+          else
+            git commit -m "chore(deploy): actualizar variante formal en /formal/ [skip ci]"
+            git push
+          fi
