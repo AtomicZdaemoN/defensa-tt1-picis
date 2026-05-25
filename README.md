@@ -2,16 +2,29 @@
 
 Presentación HTML para la defensa del Trabajo Terminal **2026-B182**
 *Esquema preventivo de privacidad para PICIS en la versión de nube
-basado en la arquitectura Zero Trust* — defensa el **26 de mayo de
+basado en la arquitectura Zero Trust* — defensa el **27 de mayo de
 2026**.
 
 Archivo único `index.html`, sin dependencias de build. Sólo
 contenido del **reporte técnico** y los **anexos** del TT.
 
+> **Rama `feat/presentacion-formal`** — variante académica con portada
+> ESCOM/IPN canónica, sin títulos de sección en pantalla y con
+> centrado vertical rebalanceado. Se despliega automáticamente en
+> `/formal/` de GitHub Pages mediante
+> `.github/workflows/build-pdf-formal.yml`.
+
 ## URLs públicos
 
-- **Deck (recomendado para los sinodales):** https://atomiczdaemon.github.io/defensa-tt1-picis/
-- **PDF estático:** https://atomiczdaemon.github.io/defensa-tt1-picis/tt1-defensa.pdf
+### Variante formal (esta rama)
+
+- **Deck formal:** https://atomiczdaemon.github.io/defensa-tt1-picis/formal/
+- **PDF formal:** https://atomiczdaemon.github.io/defensa-tt1-picis/formal/tt1-defensa-formal.pdf
+
+### Versión original (rama `main`)
+
+- **Deck original:** https://atomiczdaemon.github.io/defensa-tt1-picis/
+- **PDF original:** https://atomiczdaemon.github.io/defensa-tt1-picis/tt1-defensa.pdf
 
 ## Servir local
 
@@ -39,16 +52,26 @@ táctiles.
 
 ### Automático — GitHub Actions
 
-Cada vez que se hace push a `main` con cambios en `index.html`, `assets/`
-o `scripts/export-pdf.mjs`, el workflow [`Build PDF`](.github/workflows/build-pdf.yml)
-captura las 26 slides en 1920×1080 y comitea el `tt1-defensa.pdf`
-actualizado de vuelta al repo. El commit lleva `[skip ci]` para no
-disparar el workflow en loop.
+Cada push a `feat/presentacion-formal` que modifique `index.html`,
+`assets/` o `scripts/export-pdf.mjs` activa
+[`Build PDF + Deploy Formal Variant`](.github/workflows/build-pdf-formal.yml),
+que:
+
+1. Genera `tt1-defensa-formal.pdf` con Playwright (1920×1080)
+2. Hace commit del PDF de vuelta a esta rama (`[skip ci]`)
+3. Copia `index.html`, `assets/` y el PDF a `main/formal/`
+4. Hace commit a `main` (`[skip ci]`) → Pages re-despliega
+
+> **Nota sobre el path filter:** el workflow filtra por paths para
+> evitar loops. Si el único cambio es un merge sin modificar los paths
+> vigilados (`index.html`, `assets/**`, etc.), el workflow no se
+> disparará. En ese caso, basta hacer un pequeño cambio en `index.html`
+> (aunque sea un espacio) para forzar el trigger.
 
 También se puede correr a mano:
 
 ```bash
-gh workflow run build-pdf.yml --repo AtomicZdaemoN/defensa-tt1-picis
+gh workflow run build-pdf-formal.yml --repo AtomicZdaemoN/defensa-tt1-picis
 ```
 
 ### Local
@@ -56,27 +79,26 @@ gh workflow run build-pdf.yml --repo AtomicZdaemoN/defensa-tt1-picis
 ```bash
 npm install
 npx playwright install chromium   # la primera vez
-npm run pdf
+node scripts/export-pdf.mjs tt1-defensa-formal.pdf
 ```
 
-El PDF queda en `tt1-defensa.pdf` en la raíz. El script levanta un
-servidor estático efímero en el puerto 8742, recorre cada slide y
-hace `merge` de los 26 PDFs de una página con `pdf-lib`.
+El PDF queda en `tt1-defensa-formal.pdf` en la raíz.
 
 ## Estructura del repositorio
 
 ```
 defensa-tt1-picis/
-├── index.html              # deck completo, autocontenido (CSS + JS inline)
-├── tt1-defensa.pdf         # PDF estático regenerado por GitHub Actions
+├── index.html                    # variante formal (esta rama)
+├── tt1-defensa-formal.pdf        # PDF formal — generado por Actions
 ├── assets/
-│   └── img/                # 4 diagramas C4 (PNG) + logos IPN/ESCOM
+│   └── img/                      # 4 diagramas C4 (PNG) + logos IPN/ESCOM
 ├── scripts/
-│   └── export-pdf.mjs      # generador del PDF
+│   └── export-pdf.mjs            # generador del PDF
 ├── .github/
 │   └── workflows/
-│       └── build-pdf.yml   # pipeline automático
-├── package.json            # dependencias del exportador
+│       ├── build-pdf.yml         # pipeline para rama main (original)
+│       └── build-pdf-formal.yml  # pipeline para esta rama (formal)
+├── package.json                  # dependencias del exportador
 └── README.md
 ```
 
