@@ -218,17 +218,19 @@
       /* ===========================================
          TYPOGRAPHY
          =========================================== */
+      /* Variante formal: el eyebrow es ahora el título principal visual.
+         Fraunces display, ámbar, mayúsculas, tamaño h2. */
       .eyebrow {
-        font-family: var(--font-mono);
-        font-size: var(--tiny-size);
-        font-weight: 500;
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+        font-weight: 600;
         color: var(--accent);
         text-transform: uppercase;
-        letter-spacing: 0.16em;
-        margin-bottom: clamp(0.6rem, 1vw, 1rem);
+        letter-spacing: 0.04em;
+        font-variation-settings: "opsz" 72, "SOFT" 20;
+        margin-bottom: clamp(0.15rem, 0.3vw, 0.35rem);
       }
-      h1.slide-title,
-      h2.slide-title {
+      h1.slide-title {
         font-family: var(--font-display);
         font-weight: 600;
         font-size: var(--title-size);
@@ -237,8 +239,18 @@
         color: var(--ink-1);
         font-variation-settings: "opsz" 144, "SOFT" 30;
       }
+      /* En la variante formal, el h2 de slide es un subtítulo discreto.
+         El eyebrow (ámbar, mono) es el título visual principal. */
       h2.slide-title {
-        font-size: clamp(2rem, 3.4vw, 3.2rem);
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: clamp(0.98rem, 1.1vw, 1.12rem);
+        line-height: 1.4;
+        letter-spacing: 0;
+        color: var(--ink-soft);
+        font-variation-settings: normal;
+        max-width: 80ch;
+        margin-top: 0.15rem;
       }
       .slide-subtitle {
         font-family: var(--font-body);
@@ -253,7 +265,7 @@
         width: clamp(3rem, 4vw, 4.5rem);
         height: 3px;
         background: var(--accent);
-        margin: clamp(1rem, 1.6vw, 1.4rem) 0;
+        margin: clamp(0.7rem, 1.1vw, 1.1rem) 0;
         transform-origin: left center;
         transform: scaleX(0);
         transition: transform 540ms var(--ease-out-expo) 320ms;
@@ -286,15 +298,17 @@
       /* ===========================================
          LAYOUT HELPERS
          =========================================== */
+      /* Variante formal: contenido anclado al top para que el título
+         (eyebrow grande) sea lo primero que vea el sinodal. */
       .slide-content {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         max-width: 1320px;
         width: 100%;
         margin: 0 auto;
-        padding: clamp(2.5rem, 4vw, 4rem) 0 clamp(2.5rem, 4vw, 4rem);
+        padding: clamp(2.8rem, 4.5vw, 4.5rem) 0 clamp(1.8rem, 2.8vw, 2.8rem);
         position: relative;
         z-index: 1;
       }
@@ -356,12 +370,12 @@
       .cover-title {
         font-family: var(--font-display);
         font-weight: 500;
-        font-size: clamp(2.2rem, 3.4vw, 3.6rem);
+        font-size: clamp(2.5rem, 4.2vw, 4.6rem);
         line-height: 1.04;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em;
         color: var(--ink-1);
         font-variation-settings: "opsz" 144, "SOFT" 30;
-        max-width: 18ch;
+        max-width: 17ch;
       }
       .cover-title em {
         font-style: italic;
@@ -1668,9 +1682,10 @@
         </div>
 
         <div class="cover-right">
-          <div class="cover-mark reveal" aria-hidden="true">
-            <span>PICIS</span>
-            <span class="yr">2026 · B182</span>
+          <div class="reveal" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.4rem; height: 100%;">
+            <div style="width: 3px; height: 5rem; background: var(--accent); border-radius: 2px; opacity: 0.55;"></div>
+            <span style="font-family: var(--font-mono); font-size: clamp(0.65rem, 0.78vw, 0.8rem); color: var(--ink-mute); letter-spacing: 0.24em; text-transform: uppercase; writing-mode: vertical-rl; text-orientation: mixed; opacity: 0.7;">Defensa TT1 · 26 de mayo 2026</span>
+            <div style="width: 3px; height: 5rem; background: var(--rule); border-radius: 2px;"></div>
           </div>
         </div>
       </div>
@@ -2600,7 +2615,7 @@
               <li><strong>RNF-02</strong> · alineación NIST CSF 2.0</li>
               <li><strong>RNF-08</strong> · aprovisionamiento declarativo reproducible</li>
               <li><strong>RNF-09</strong> · reducción verificable de superficie</li>
-              <li><strong>RNF-10</strong> · F<sub>β=2</sub> como criterio de aceptación (TT2)</li>
+              <li><strong>RNF-10</strong> · verificabilidad de pruebas — cada caso reproducible con evidencia de ejecución</li>
             </ul>
           </div>
         </div>
@@ -2625,8 +2640,8 @@
       </div>
       <div class="slide-content">
         <div class="reveal eyebrow">Diseño · arquitectura C4 nivel 1</div>
-        <h2 class="slide-title reveal" style="font-size: clamp(1.5rem, 2.4vw, 2.2rem);">
-          PICIS sobre GCP — diagrama de <span class="accent-word">contexto</span>
+        <h2 class="slide-title reveal">
+          PICIS sobre GCP — diagrama de contexto (C4 nivel 1)
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
 
@@ -2758,8 +2773,8 @@
       </div>
       <div class="slide-content">
         <div class="reveal eyebrow">Diseño · arquitectura C4 nivel 2</div>
-        <h2 class="slide-title reveal" style="font-size: clamp(1.5rem, 2.4vw, 2.2rem);">
-          Contenedores — cinco <span class="accent-word">planos lógicos</span> en GCP
+        <h2 class="slide-title reveal">
+          Contenedores — cinco planos lógicos sobre Google Cloud Platform
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
 
@@ -2864,8 +2879,8 @@
       </div>
       <div class="slide-content">
         <div class="reveal eyebrow">Diseño · flujo de autorización Zero Trust</div>
-        <h2 class="slide-title reveal" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">
-          Once pasos para una sola petición — sin <span class="accent-word">confianza implícita</span>
+        <h2 class="slide-title reveal">
+          Once pasos para una sola petición — principio de verificación explícita (NIST SP 800-207)
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
         <div class="reveal zt-flow" style="margin-top: 0.4rem;">
@@ -2988,8 +3003,8 @@
       </div>
       <div class="slide-content">
         <div class="reveal eyebrow">Diseño · arquitectura C4 nivel 3</div>
-        <h2 class="slide-title reveal" style="font-size: clamp(1.5rem, 2.4vw, 2.2rem);">
-          Componentes del <span class="accent-word">clasificador NLP/IA</span>
+        <h2 class="slide-title reveal">
+          Componentes del microservicio clasificador NLP/IA (C4 nivel 3)
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
 
@@ -3254,9 +3269,9 @@
         <span class="count">24 / 26</span>
       </div>
       <div class="slide-content">
-        <div class="reveal eyebrow">Conclusiones</div>
+        <div class="reveal eyebrow">Resultados parciales y avances obtenidos</div>
         <h2 class="slide-title reveal">
-          TT1 entrega un esquema <span class="accent-word">verificable</span>, no una intención
+          Avance de los tres objetivos particulares concluidos en TT1
         </h2>
         <div class="slide-rule" aria-hidden="true"></div>
         <div class="grid-2" style="margin-top: 0.4rem;">
@@ -3279,19 +3294,20 @@
             </li>
           </ul>
           <div class="reveal">
-            <div class="quote-block" style="font-size: 0.9em;">
-              <p style="font-size: clamp(1rem, 1.4vw, 1.35rem); line-height: 1.55;">
-                El valor del TT1 no es haber elegido GCP; es haber producido un
-                documento técnico donde <em>cualquier control</em> se puede
-                trazar al artículo legal que lo exige y a la subcategoría NIST
-                que lo norma — y viceversa.
+            <div class="card has-accent">
+              <span class="badge">Trazabilidad obtenida</span>
+              <h3>Mapeo bidireccional artículo ↔ control</h3>
+              <p>
+                Cada control del catálogo queda trazado al artículo legal que lo
+                exige (LFPDPPP, LGPDPPSO, Reglamento) y a la subcategoría NIST
+                CSF 2.0 que lo norma. El mapeo inverso — artículo a control —
+                está documentado en el Anexo E del reporte técnico.
               </p>
-              <cite>Síntesis del Cap. 7 — Conclusiones</cite>
             </div>
           </div>
         </div>
         <p class="ref reveal" style="margin-top: 1.4rem;">
-          Reporte técnico · Cap. 7 — Conclusiones TT1
+          Reporte técnico · Cap. 7 — Avances y resultados parciales TT1
         </p>
       </div>
       <div class="slide-foot">
