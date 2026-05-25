@@ -218,17 +218,16 @@
       /* ===========================================
          TYPOGRAPHY
          =========================================== */
-      /* Variante formal: el eyebrow es ahora el título principal visual.
-         Fraunces display, ámbar, mayúsculas, tamaño h2. */
+      /* Variante formal: eyebrow es una etiqueta de sección pequeña,
+         discreta — identifica la sección sin dominar visualmente. */
       .eyebrow {
-        font-family: var(--font-display);
-        font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+        font-family: var(--font-mono);
+        font-size: clamp(0.72rem, 0.85vw, 0.88rem);
         font-weight: 600;
         color: var(--accent);
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        font-variation-settings: "opsz" 72, "SOFT" 20;
-        margin-bottom: clamp(0.15rem, 0.3vw, 0.35rem);
+        letter-spacing: 0.18em;
+        margin-bottom: 0.45rem;
       }
       h1.slide-title {
         font-family: var(--font-display);
@@ -239,18 +238,11 @@
         color: var(--ink-1);
         font-variation-settings: "opsz" 144, "SOFT" 30;
       }
-      /* En la variante formal, el h2 de slide es un subtítulo discreto.
-         El eyebrow (ámbar, mono) es el título visual principal. */
+      /* Variante formal: los h2 de slide no aparecen en pantalla —
+         el expositor los dice de memoria. El espacio liberado se usa
+         como respiración adicional entre la etiqueta y el contenido. */
       h2.slide-title {
-        font-family: var(--font-body);
-        font-weight: 400;
-        font-size: clamp(0.98rem, 1.1vw, 1.12rem);
-        line-height: 1.4;
-        letter-spacing: 0;
-        color: var(--ink-soft);
-        font-variation-settings: normal;
-        max-width: 80ch;
-        margin-top: 0.15rem;
+        display: none;
       }
       .slide-subtitle {
         font-family: var(--font-body);
@@ -265,7 +257,8 @@
         width: clamp(3rem, 4vw, 4.5rem);
         height: 3px;
         background: var(--accent);
-        margin: clamp(0.7rem, 1.1vw, 1.1rem) 0;
+        /* margen inferior generoso — ocupa el espacio donde estaba el h2 */
+        margin: clamp(0.5rem, 0.8vw, 0.8rem) 0 clamp(1.6rem, 2.4vw, 2.4rem);
         transform-origin: left center;
         transform: scaleX(0);
         transition: transform 540ms var(--ease-out-expo) 320ms;
@@ -275,8 +268,8 @@
       }
 
       p.lead {
-        font-size: clamp(1rem, 1.2vw, 1.25rem);
-        line-height: 1.55;
+        font-size: clamp(1.05rem, 1.3vw, 1.35rem);
+        line-height: 1.6;
         color: var(--ink-body);
         max-width: 64ch;
       }
@@ -315,13 +308,13 @@
       .grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: clamp(1.4rem, 2.4vw, 2.6rem);
+        gap: clamp(1.6rem, 2.8vw, 3rem);
         align-items: start;
       }
       .grid-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: clamp(1rem, 1.6vw, 1.5rem);
+        gap: clamp(1.1rem, 1.8vw, 1.8rem);
       }
 
       /* ===========================================
@@ -471,7 +464,7 @@
       .card {
         background: #ffffff;
         border: 1px solid var(--rule);
-        padding: clamp(1.1rem, 1.6vw, 1.5rem) clamp(1.2rem, 1.8vw, 1.6rem);
+        padding: clamp(1.3rem, 1.9vw, 1.9rem) clamp(1.4rem, 2vw, 2rem);
         position: relative;
       }
       .card.has-accent::before {
@@ -1640,54 +1633,122 @@
          01 — PORTADA
          ============================================================ -->
     <section class="slide cover" data-slide="01">
-      <div class="cover-grid">
-        <div class="cover-left">
-          <div class="reveal">
-            <div class="cover-logos">
-              <img src="assets/img/logo-ipn.png" alt="IPN" />
-              <img src="assets/img/logo-escom.png" alt="ESCOM" />
-            </div>
-            <div class="cover-eyebrow" style="margin-top: 0.8rem;">
-              Instituto Politécnico Nacional · Escuela Superior de Cómputo
-            </div>
-          </div>
+      <!-- Portada centrada — formato ESCOM/IPN con identidad visual del proyecto -->
+      <div class="reveal" style="
+        position: relative; z-index: 1;
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-start;
+        text-align: center;
+        width: 100%;
+        padding: clamp(2.2rem, 3.8vw, 4rem) clamp(3rem, 6vw, 7rem) clamp(1.5rem, 2.5vw, 2.5rem);
+        gap: 0;
+      ">
 
-          <div>
-            <div class="reveal" style="font-family: var(--font-mono); font-size: var(--tiny-size); letter-spacing: 0.16em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem;">
-              Trabajo Terminal 2026-B182 · Defensa TT1
-            </div>
-            <h1 class="cover-title reveal">
-              Esquema preventivo de privacidad para PICIS en la versión de nube basado en la arquitectura <em>Zero Trust</em>
-            </h1>
-            <div class="cover-rule reveal" aria-hidden="true"></div>
-          </div>
+        <!-- Logos — mismo alto, horizontalmente alineados y centrados -->
+        <div style="
+          display: flex; align-items: center; justify-content: center;
+          gap: clamp(4rem, 8vw, 9rem);
+          margin-bottom: clamp(1.1rem, 1.6vw, 1.6rem);
+        ">
+          <img src="assets/img/logo-ipn.png" alt="IPN"
+               style="height: clamp(4rem, 7vw, 7.5rem); width: auto; object-fit: contain;" />
+          <img src="assets/img/logo-escom.png" alt="ESCOM"
+               style="height: clamp(4rem, 7vw, 7.5rem); width: auto; object-fit: contain;" />
+        </div>
 
-          <div class="cover-meta reveal">
-            <dl>
-              <dt>Equipo</dt>
-              <dd>
-                Francisco López Carlos Uriel<br />
-                Leyva García Diego Alejandro<br />
-                Romero Carreón Miguel Arturo
-              </dd>
-              <dt>Directores</dt>
-              <dd>
-                Dra. Cortez Duarte Nidia Asunción<br />
-                Dr. Aguirre Anaya Eleazar
-              </dd>
-              <dt>Fecha</dt>
-              <dd>26 de mayo de 2026 · Ciudad de México</dd>
-            </dl>
+        <!-- Institución -->
+        <div style="
+          font-family: var(--font-body);
+          font-weight: 700;
+          font-size: clamp(1rem, 1.25vw, 1.25rem);
+          color: var(--ink-1);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          line-height: 1.5;
+          margin-bottom: clamp(1.1rem, 1.6vw, 1.6rem);
+        ">
+          Instituto Politécnico Nacional<br/>
+          <span style="font-size: 0.86em; color: var(--ink-2);">Escuela Superior de Cómputo</span>
+        </div>
+
+        <!-- Separador ámbar -->
+        <div style="width: clamp(3.5rem, 5vw, 5rem); height: 3px; background: var(--accent); margin: 0 auto clamp(1rem, 1.4vw, 1.4rem);"></div>
+
+        <!-- Número TT -->
+        <div style="
+          font-family: var(--font-mono);
+          font-style: italic;
+          font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+          color: var(--ink-mute);
+          letter-spacing: 0.06em;
+          margin-bottom: clamp(0.8rem, 1.1vw, 1.1rem);
+        ">Trabajo Terminal 2026-B182</div>
+
+        <!-- Título completo en comillas -->
+        <div style="
+          font-family: var(--font-body);
+          font-weight: 700;
+          font-size: clamp(1.05rem, 1.45vw, 1.45rem);
+          line-height: 1.45;
+          color: var(--ink-1);
+          max-width: 680px;
+          margin-bottom: clamp(1.6rem, 2.4vw, 2.4rem);
+        ">
+          "Esquema preventivo de privacidad para PICIS en la versión de nube<br/>
+          basado en la arquitectura Zero Trust"
+        </div>
+
+        <!-- Presentan -->
+        <div style="margin-bottom: clamp(1.1rem, 1.6vw, 1.6rem);">
+          <div style="
+            font-family: var(--font-body);
+            font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+            color: var(--ink-mute);
+            letter-spacing: 0.06em;
+            margin-bottom: 0.4rem;
+          ">Presentan</div>
+          <div style="
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(0.88rem, 1vw, 1rem);
+            color: var(--ink-1);
+            line-height: 1.8;
+          ">
+            López Carlos Uriel Francisco<br/>
+            Leyva García Diego Alejandro<br/>
+            Romero Carreón Miguel Arturo
           </div>
         </div>
 
-        <div class="cover-right">
-          <div class="reveal" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.4rem; height: 100%;">
-            <div style="width: 3px; height: 5rem; background: var(--accent); border-radius: 2px; opacity: 0.55;"></div>
-            <span style="font-family: var(--font-mono); font-size: clamp(0.65rem, 0.78vw, 0.8rem); color: var(--ink-mute); letter-spacing: 0.24em; text-transform: uppercase; writing-mode: vertical-rl; text-orientation: mixed; opacity: 0.7;">Defensa TT1 · 26 de mayo 2026</span>
-            <div style="width: 3px; height: 5rem; background: var(--rule); border-radius: 2px;"></div>
+        <!-- Directores -->
+        <div style="margin-bottom: clamp(1.1rem, 1.6vw, 1.6rem);">
+          <div style="
+            font-family: var(--font-body);
+            font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+            color: var(--ink-mute);
+            letter-spacing: 0.06em;
+            margin-bottom: 0.4rem;
+          ">Directores</div>
+          <div style="
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(0.88rem, 1vw, 1rem);
+            color: var(--ink-1);
+          ">
+            Dr. Aguirre Anaya Eleazar
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Dra. Cortez Duarte Nidia Asunción
           </div>
         </div>
+
+        <!-- Fecha -->
+        <div style="
+          font-family: var(--font-body);
+          font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+          color: var(--ink-soft);
+        ">Ciudad de México, mayo de 2026</div>
+
       </div>
     </section>
 
