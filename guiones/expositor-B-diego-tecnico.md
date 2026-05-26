@@ -7,9 +7,10 @@
 > **Tiempo objetivo total:** ~5:00 min
 >
 > **Notas de estilo:**
-> - Se eliminaron las guías de pronunciación fonética.
-> - Se conservan notas entre corchetes para acciones no verbales (`[Señalar...]`, `[Contacto visual...]`).
-> - Los acrónimos complejos se detallan con su significado entre paréntesis la primera vez que se usan.
+> - Sin guías de pronunciación fonética.
+> - Notas entre corchetes para acciones no verbales (`[Señalar...]`, `[Contacto visual...]`).
+> - Se eliminaron las transiciones habladas de relevo ("a continuación", "le paso la palabra").
+> - Foco en el **proceso de diseño**: explicar las decisiones de arquitectura que tomó el equipo.
 
 ---
 
@@ -17,11 +18,11 @@
 
 > *[Transición: Entras después de la intervención de Miguel en el slide 05]*
 
-Gracias, Miguel. Como mencionas, PICIS está migrando a su versión 2 en la nube, bajo el paradigma de privacidad y seguridad por diseño.
+PICIS está migrando a su versión 2 en la nube, bajo el paradigma de privacidad y seguridad por diseño.
 
 > *[Señalar la tabla del slide]*
 
-La diferencia es estructural. La versión 1 depende de servidores locales, perímetros físicos y credenciales estáticas. La versión 2 evoluciona hacia una infraestructura gestionada en Google Cloud, con un perímetro lógico Zero Trust, identidades federadas libres de claves y auditoría inmutable.
+El diseño de esta transición parte de redefinir la arquitectura local de la versión 1. Mientras que antes dependíamos de servidores físicos y credenciales estáticas locales, la versión 2 evoluciona hacia una infraestructura gestionada en Google Cloud, con un perímetro lógico Zero Trust, identidades federadas libres de claves y auditoría inmutable.
 
 > *[Contacto visual · Énfasis]*
 
@@ -33,19 +34,15 @@ Este cambio redefine por completo el modelo de confianza del sistema, lo que nos
 
 > *[Ritmo continuo]*
 
-Al migrar a la nube, el perímetro físico desaparece, lo que disuelve tres garantías fundamentales:
+Al diseñar la migración a la nube, analizamos cómo la desaparición del perímetro físico disuelve tres garantías fundamentales:
 
-Primero: La red ya no protege. Cada solicitud de acceso debe verificarse individualmente bajo políticas basadas en el contexto del usuario.
+Primero: La red ya no protege de forma implícita. Cada solicitud de acceso debe verificarse individualmente bajo políticas basadas en el contexto del usuario.
 
-Segundo: Las identidades no pueden usar claves estáticas. En la versión 1, los microservicios compartían claves en archivos; un vector de filtración permanente que ahora es inaceptable.
+Segundo: Las identidades de los microservicios no pueden usar claves estáticas. En la versión 1, compartir claves en archivos de configuración constituía un vector de filtración permanente que ahora es inaceptable.
 
 Tercero: El cumplimiento legal se reconfigura, pues la legislación mexicana exige protección de datos de manera explícita en el cómputo en la nube.
 
 Nuestro esquema de seguridad mitiga estos tres frentes de forma integrada.
-
-> *[Mirada hacia Carlos]*
-
-Carlos, te cedo la palabra para el objetivo general.
 
 ---
 
@@ -53,11 +50,11 @@ Carlos, te cedo la palabra para el objetivo general.
 
 > *[Transición: Entras después de la intervención de Miguel en el slide 12]*
 
-Gracias, Miguel. Un elemento clave es la métrica de rendimiento del clasificador. Adoptamos F-beta con beta igual a 2, que es la referencia de la industria.
+Un elemento clave de la investigación fue seleccionar la métrica de rendimiento adecuada para el clasificador. Evaluamos diversas métricas y adoptamos F-beta con beta igual a 2, que es el estándar de la industria para el descubrimiento de información sensible.
 
 > *[Énfasis en la lógica]*
 
-Esto significa que damos el doble de importancia al recall (exhaustividad) sobre la precisión.
+Esta decisión técnica significa que damos el doble de importancia al recall (exhaustividad) sobre la precisión.
 
 La lógica es directa: en privacidad, un falso negativo es crítico, pues significa exponer un dato sensible sin anonimizar. En cambio, un falso positivo solo implica que un analista revisará manualmente un documento de más.
 
@@ -69,7 +66,7 @@ Esta métrica constituye el criterio de aceptación para las pruebas de la segun
 
 > *[Ritmo seguro · Explicación analítica]*
 
-La selección de la nube no fue arbitraria; evaluamos GCP (Google Cloud Platform) frente a AWS y Azure bajo cinco criterios técnicos. GCP sobresale en tres áreas clave:
+La selección de la nube no fue arbitraria; evaluamos de manera sistemática a GCP (Google Cloud Platform) frente a AWS y Azure bajo cinco criterios técnicos específicos. GCP sobresalió en tres áreas clave:
 
 Uno: Control de acceso Zero Trust nativo mediante IAP (Identity-Aware Proxy) y políticas de contexto.
 
@@ -77,11 +74,7 @@ Dos: Federación de identidades sin llaves estáticas con Workload Identity, eli
 
 Tres: Clasificación nativa integrada con SDP (Sensitive Data Protection).
 
-En conclusión, Google Cloud ofrece la infraestructura mejor integrada para desplegar la arquitectura de PICIS.
-
-> *[Mirada hacia Carlos]*
-
-Carlos, continuamos con la metodología.
+El resultado de esta evaluación nos demostró que Google Cloud ofrece la infraestructura mejor integrada para desplegar la arquitectura modular de PICIS.
 
 ---
 
@@ -89,15 +82,15 @@ Carlos, continuamos con la metodología.
 
 > *[Transición: Entras después de la intervención de Miguel en el slide 16]*
 
-Derivado del análisis de brecha, estructuramos 12 requisitos funcionales y 10 no funcionales, con criterios de aceptación medibles.
+Para llegar a la formulación de los requisitos funcionales y no funcionales, realizamos un proceso de mapeo a partir de las brechas de seguridad identificadas. Estructuramos 12 requisitos funcionales y 10 no funcionales, con criterios de aceptación medibles.
 
 > *[Contacto visual]*
 
-Destaco los dos pilares del diseño:
+Destaco los dos pilares del diseño que surgieron de este proceso:
 
 En lo funcional, la inmutabilidad de los registros de auditoría mediante almacenamiento WORM (Write Once, Read Many), garantizando la trazabilidad exigida por la ley.
 
-En lo no funcional, el aprovisionamiento declarativo de la infraestructura. Todo el entorno se despliega con código reproducible, eliminando configuraciones manuales.
+En lo no funcional, el aprovisionamiento declarativo de la infraestructura. Todo el entorno se despliega con código reproducible, eliminando configuraciones manuales propensas a errores.
 
 El catálogo completo está detallado en el Anexo A.
 
@@ -107,7 +100,7 @@ El catálogo completo está detallado en el Anexo A.
 
 > *[Señalar el diagrama C4]*
 
-Este es el mapa de contenedores de PICIS v2, el cual estructura la arquitectura en la nube mediante cinco planos lógicos interconectados:
+El modelado de esta arquitectura en cinco planos lógicos fue el resultado de un proceso iterativo de diseño buscando el aislamiento de la superficie de ataque del clúster:
 
 El Plano de Ingreso: Donde el balanceador de carga colabora con IAP (Identity-Aware Proxy) para firmar un token de identidad y validar el contexto antes de tocar la red interna.
 
@@ -123,17 +116,13 @@ Finalmente, los planos transversales de Control y de Ciclo de Vida de Software g
 
 > *[Señalar el diagrama del clasificador]*
 
-Descendemos un nivel más en la arquitectura para analizar el clasificador, que es el componente que interactúa de forma directa con los datos sensibles.
+Descendemos un nivel más en la arquitectura para analizar el clasificador, el componente más sensible por interactuar directamente con los datos.
 
-Este módulo opera en un pipeline de procesamiento modular dentro del clúster privado de GKE. Su función es procesar el texto y clasificarlo bajo nuestra taxonomía de 55 tipos de datos personales.
+El diseño de este pipeline de procesamiento responde a la necesidad de asegurar que el flujo de procesamiento de lenguaje natural cumpla estrictamente con el Artículo 22 de la Ley de Datos Personales (LGPDPPSO). 
 
 > *[Contacto visual directo con el jurado · Ritmo pausado]*
 
-Quiero enfatizar que este diseño responde estrictamente al Artículo 22 de la Ley de Datos Personales (LGPDPPSO). Nuestro sistema no toma decisiones automatizadas definitivas. El clasificador genera una preclasificación y es el Analista humano quien valida y confirma los incidentes en la consola. Toda la trazabilidad de esta interacción se registra en registros de auditoría inmutables.
-
-> *[Mirada hacia Carlos]*
-
-Carlos, pasamos al catálogo de controles.
+Esto determinó que el sistema no tomara decisiones automatizadas definitivas. El clasificador genera una preclasificación y es el Analista humano quien valida y confirma los incidentes en la consola. Toda la trazabilidad de esta interacción se registra en registros de auditoría inmutables.
 
 ---
 
@@ -141,7 +130,7 @@ Carlos, pasamos al catálogo de controles.
 
 > *[Transición: Entras después de la intervención de Miguel en el slide 23]*
 
-Como resultados de esta etapa de TT1, cumplimos tres de los cuatro objetivos particulares:
+Como resultados de esta etapa de investigación de TT1, cumplimos tres de los cuatro objetivos particulares:
 
 Primero, el OP-1: Caracterizamos la brecha de seguridad asociando cada activo crítico a un control objetivo.
 
@@ -151,11 +140,7 @@ Tercero, el OP-3: Creamos el mapeo legal entre la normativa mexicana y los contr
 
 > *[Énfasis final con seguridad]*
 
-El mayor valor del diseño es la trazabilidad bidireccional: ante una auditoría, demostramos qué artículo exige cada control, y qué control técnico satisface cada artículo legal.
-
-> *[Mirada hacia Carlos]*
-
-Carlos, cierras con el trabajo a futuro.
+El mayor valor de esta fase de diseño es la trazabilidad bidireccional: ante una auditoría, demostramos qué artículo exige cada control, y qué control técnico satisface cada artículo legal.
 
 ---
 

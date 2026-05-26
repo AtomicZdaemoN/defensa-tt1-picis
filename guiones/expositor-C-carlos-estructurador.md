@@ -1,21 +1,16 @@
 # Guion · Carlos — Estructurador / Normativo
 
-> **Rol:** Define conceptos, encuadra el marco legal mexicano, formaliza
-> objetivos y metodología, presenta arquitectura general, catálogo de
-> controles y cronograma de trabajo futuro.
+> **Rol:** Define conceptos, encuadra el marco legal, formaliza los objetivos de la investigación y la metodología, y presenta el catálogo de controles y el cronograma para la fase práctica (TT2).
 >
 > **Diapositivas asignadas:** 03, 04, 08, 09, 11, 15, 18, 22, 25, 26
 >
-> **Tiempo objetivo total:** ~7:00 min
+> **Tiempo objetivo total:** ~6:30 min
 >
 > **Notas de estilo:**
-> - Sin etiquetas de pronunciación fonética.
-> - Notas entre corchetes para acciones no verbales (`[Señalar...]`,
->   `[Contacto visual...]`, `[Pausa breve]`, `[Énfasis]`).
-> - Acrónimos detallados con su significado entre paréntesis la
->   primera vez que se usan.
-> - Énfasis en el **proceso**: cómo se construyó cada producto, no
->   sólo qué resultado se obtuvo.
+> - Sin guías de pronunciación fonética.
+> - Notas entre corchetes para acciones no verbales (`[Señalar...]`, `[Contacto visual...]`).
+> - Se eliminaron las transiciones habladas de relevo ("a continuación", "le paso la palabra").
+> - Foco en el **proceso de investigación**: explicar por qué se estructuraron así los objetivos, marcos, la metodología y el catálogo.
 
 ---
 
@@ -23,27 +18,13 @@
 
 > *[Transición: Entras después de Miguel en el slide 02]*
 
-Gracias, Miguel. Antes de hablar de cómo PICIS protege los datos,
-definamos con precisión qué entendemos por dato personal.
+Antes de detallar cómo PICIS protege la información, es indispensable definir con precisión el objeto de estudio de esta investigación: el dato personal.
 
-> *[Ritmo pausado · contacto visual]*
+> *[Contacto visual]*
 
-Un dato personal es **cualquier información concerniente a una
-persona física identificada o identificable**. La palabra clave es
-*identificable* — quiere decir que su identidad puede determinarse
-directa o indirectamente a través de cualquier información.
+Adoptamos la definición del marco metodológico del INAI, que lo identifica como cualquier información concerniente a una persona física que la haga identificable, directa o indirectamente. 
 
-Esa definición no es nuestra. Viene del marco metodológico del INAI
-(Instituto Nacional de Transparencia, Acceso a la Información y
-Protección de Datos Personales), y es la que tomamos como referencia
-para construir la taxonomía operativa de PICIS.
-
-> *[Señalar la lista de categorías]*
-
-Esa taxonomía maneja **55 tipos en 10 categorías**: identificadores,
-electrónicos, laborales, tránsito, patrimonio, salud, académicos,
-ideológicos, intimidad y rasgos físicos. Varias de estas categorías
-contienen datos sensibles — los más peligrosos si se exponen.
+El proceso de clasificación de PICIS utiliza una taxonomía de **55 tipos de datos organizados en 10 categorías** (identificadores, datos de salud, patrimoniales, ideológicos, entre otros). Nuestra investigación se enfoca con especial prioridad en los datos sensibles, aquellos que, de ser expuestos, atentan contra la esfera más íntima del titular o pueden dar origen a discriminación.
 
 ---
 
@@ -51,274 +32,128 @@ contienen datos sensibles — los más peligrosos si se exponen.
 
 > *[Ritmo continuo]*
 
-Sobre el marco legal mexicano, son **datos sensibles** los referentes
-a los aspectos más íntimos de la persona: origen étnico, salud,
-creencias religiosas, preferencia sexual. Su mal uso puede provocar
-discriminación o un riesgo grave para el titular.
-
-México los protege con dos leyes:
-
-La **LFPDPPP** (Ley Federal de Protección de Datos Personales en
-Posesión de los Particulares) regula al sector privado.
-
-Y la **LGPDPPSO** (Ley General de Protección de Datos Personales en
-Posesión de Sujetos Obligados) regula a más de **340 sujetos
-obligados** en México.
+En el ordenamiento jurídico mexicano, la protección de estos datos sensibles se regula de manera diferenciada. Mientras que la LFPDPPP (Ley Federal de Protección de Datos Personales en Posesión de los Particulares) norma al sector privado, la LGPDPPSO (Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados) impone obligaciones a las instituciones públicas.
 
 > *[Énfasis · contacto visual]*
 
-El Instituto Politécnico Nacional está entre ellos.
+El Instituto Politécnico Nacional, al ser una institución del Estado, está catalogado bajo este segundo marco. 
 
-Esto significa que el IPN tiene obligación legal de proteger los
-datos personales que trata, y PICIS nació precisamente para ayudar a
-cumplir esa obligación.
-
-Miguel, sigues con la motivación operativa.
+Por lo tanto, la migración de PICIS a la nube no es sólo un reto técnico, sino una obligación de estricto cumplimiento legal. El diseño de nuestro esquema preventivo busca garantizar que la plataforma opere en conformidad con las salvaguardas que esta ley exige.
 
 ---
 
 ## Slide 08 — Objetivo general · 55s
 
-> *[Transición: Entras después de Diego en el slide 07]*
-
-Gracias, Diego. Formalicemos el objetivo del trabajo.
-
 > *[Ritmo pausado · señalar el objetivo en pantalla]*
 
-El objetivo aprobado por la dirección dice: *implementar un esquema
-preventivo unificado para ofrecer privacidad, confidencialidad e
-integridad de los datos sensibles de la versión en nube de PICIS,
-mediante la integración de controles técnicos en las funciones de
-Identificar y Proteger de acuerdo a los frameworks del NIST*.
+El objetivo general aprobado originalmente en nuestro protocolo de investigación establece: *implementar un esquema preventivo unificado para ofrecer privacidad, confidencialidad e integridad de los datos sensibles de la versión en nube de PICIS...*
 
-> *[Pausa breve · señalar la nota de ajuste]*
+> *[Señalar el ajuste en pantalla]*
 
-Como verán, marcamos en pantalla un **ajuste propuesto para TT2**:
-sustituir *implementar* por *diseñar*. La razón es que el alcance de
-TT1 es estrictamente de diseño — entregamos el esquema completo, la
-trazabilidad normativa y el análisis de impacto. La implementación
-operativa, con pruebas medibles, corresponde a TT2. El verbo
-*diseñar* refleja eso con más precisión.
+Como se aprecia en la diapositiva, proponemos formalmente un **ajuste en el verbo principal para la fase final del proyecto: cambiar "implementar" por "diseñar"**. Este ajuste refleja con honestidad académica el alcance real de esta primera etapa: el diseño completo del catálogo de controles, el análisis de brechas y el análisis de impacto. La implementación operativa y pruebas de los controles corresponden por definición a la fase de TT2.
 
-> *[Contacto visual]*
-
-Y también queremos mencionar abiertamente que **el «para qué» del
-objetivo está pendiente de redactarse**. El proyecto sigue en
-desarrollo y esa parte se cerrará en TT2, junto con el ajuste verbal.
+Asimismo, queremos señalar que el **«para qué» del objetivo queda pendiente de redacción definitiva**. Debido a que el proyecto se encuentra en pleno desarrollo académico, el impacto y beneficio final se consolidarán una vez concluidas las pruebas de funcionamiento en la siguiente etapa.
 
 ---
 
 ## Slide 09 — Objetivos particulares · 40s
 
-> *[Ritmo continuo]*
+> *[Contacto visual]*
 
-El objetivo general se descompone en **cuatro objetivos
-particulares**. Tres cierran en TT1, uno se demuestra en TT2.
+El objetivo general se desglosa en **cuatro objetivos particulares** diseñados como metas evaluables y no como simples actividades:
 
-OP-1, caracterizar la **brecha** entre on-premise y nube, activo por
-activo.
+Primero, el **OP-1**: Caracterizar la brecha de seguridad activo por activo, asociando vulnerabilidades físicas a controles objetivo en la nube.
 
-OP-2, **diseñar** un conjunto coherente de controles técnicos en las
-funciones Identify y Protect del NIST, con al menos un control por
-subcategoría aplicable.
+Segundo, el **OP-2**: Diseñar un catálogo de controles técnicos que abarque al menos el 90 % de las subcategorías de Identificación y Protección del marco NIST.
 
-OP-3, garantizar la **trazabilidad normativa** simultánea con
-legislación mexicana y marcos NIST — al menos un control por
-artículo aplicable.
+Tercero, el **OP-3**: Garantizar la conformidad legal y técnica mediante una matriz de trazabilidad bidireccional que cubra al menos el 95 % de los artículos aplicables.
 
-> *[Señalar OP-4 destacado]*
-
-Y OP-4, **validar operativamente** mediante matriz de pruebas con
-criterio numérico y evidencia. Eso es TT2.
-
-Miguel, sigues con el estado del arte.
+Y finalmente, el **OP-4**: Validar el funcionamiento operativo mediante una matriz de pruebas cuantitativa. Este último objetivo define el alcance de la fase de TT2.
 
 ---
 
 ## Slide 11 — Cuatro marcos del NIST · 45s
 
-> *[Transición: Entras después de Miguel en el slide 10]*
+> *[Explicación analítica]*
 
-Sobre los marcos teóricos, integramos cuatro publicaciones del NIST.
-No usamos uno solo — cada uno aporta lo que le toca.
+Para estructurar este esquema preventivo, llevamos a cabo un proceso de selección y descarte de marcos de ciberseguridad, concluyendo que la integración de cuatro publicaciones específicas del NIST era la ruta óptima para PICIS-nube.
 
-El **CSF 2.0** (Cybersecurity Framework) es el marco rector. De sus
-seis funciones, nos concentramos en *Identify* y *Protect*. La
-función *Govern* se ejerce a nivel institución, no a nivel de
-nuestro esquema.
+El **NIST CSF 2.0** actúa como marco rector, enfocándonos estrictamente en las funciones de Identificar y Proteger. 
 
-El **Privacy Framework 1.0** complementa con la perspectiva de los
-derechos del titular. Es lo que nos permitió articular el análisis
-de impacto a la privacidad con las funciones del CSF.
+El **NIST Privacy Framework** nos permitió alinear la ciberseguridad con los derechos de privacidad de los usuarios. 
 
-El **SP 800-53 Revisión 5** provee el catálogo institucional de
-controles. De ese catálogo derivamos y personalizamos los 22
-controles de nuestro esquema, ajustados a la realidad operativa de
-PICIS.
+El **NIST SP 800-53** nos dotó de la biblioteca de controles base, la cual analizamos y refinamos para derivar nuestras 22 salvaguardas específicas. 
 
-> *[Énfasis]*
-
-Y el **SP 800-207, Zero Trust Architecture**. Define el principio
-fundamental que rige todo el diseño: cada solicitud se evalúa de
-forma independiente. Sin privilegios por red ni por origen.
-
-Miguel, sigues con la legislación mexicana.
+Y el **NIST SP 800-207** nos brindó las pautas de arquitectura Zero Trust para diseñar el flujo de autorización sin perímetros físicos.
 
 ---
 
 ## Slide 15 — Metodología · 45s
 
-> *[Transición: Entras después de Diego en el slide 14]*
+> *[Ritmo continuo]*
 
-La metodología del trabajo se estructura en **cinco etapas**. Cuatro
-cierran en TT1.
+La metodología de investigación se diseñó en **cinco etapas acopladas**, donde el entregable de cada una sirve como insumo de la siguiente.
 
-Etapa uno, **caracterización de la brecha**. Inventario de activos
-on-premise contra controles objetivo en nube. Alimenta el OP-1.
+En las etapas uno y dos realizamos la caracterización de la brecha y el análisis normativo de la legislación mexicana. 
 
-Etapa dos, **análisis normativo**. Construcción del mapeo
-bidireccional artículo ↔ control sobre LFPDPPP, su Reglamento y la
-LGPDPPSO. Corresponde al OP-3.
+Con esa información, en la etapa tres diseñamos el catálogo de 22 controles técnicos específicos, y en la etapa cuatro ejecutamos el Análisis de Impacto a la Privacidad (PIA). Estas primeras cuatro etapas cierran la fase de investigación documental y de diseño en TT1.
 
-Etapa tres, **diseño de controles**. Los 22 controles agrupados en
-confidencialidad, integridad y privacidad. Corresponde al OP-2.
-
-Etapa cuatro, **análisis de impacto a la privacidad** — el PIA del
-clasificador en siete bloques.
-
-> *[Énfasis · señalar etapa 5]*
-
-Y etapa cinco, **despliegue y pruebas**, que es TT2. Aprovisionamiento
-declarativo, matriz de pruebas con criterio numérico, evidencia de
-ejecución.
-
-> *[Contacto visual]*
-
-Cada etapa produce un entregable que la siguiente consume. No son
-fases independientes — son fases acopladas.
-
-Miguel, sigues con la brecha en concreto.
+La etapa cinco, que abarca el aprovisionamiento automatizado en la nube y la ejecución de la matriz de pruebas, constituye el plan metodológico a desarrollar en TT2.
 
 ---
 
 ## Slide 18 — Arquitectura C4 nivel 1 · 50s
 
-> *[Transición: Entras después de Diego en el slide 17]*
+> *[Señalar el diagrama de contexto]*
 
-Entramos al diseño de la arquitectura. Decidimos modelar el sistema
-con la notación **C4** porque permite ir de lo general a lo
-específico — del contexto al detalle de componentes — sin perder
-trazabilidad. Lo que ven es el nivel uno: el diagrama de contexto.
+Para modelar la arquitectura y comunicar la superficie de ataque del sistema a los sinodales, adoptamos la notación **C4**, ya que permite descomponer el diseño de lo general a lo específico sin perder de vista los roles del sistema.
 
-> *[Señalar la columna izquierda]*
+Este nivel uno representa el diagrama de contexto:
 
-A la izquierda, los **cinco roles humanos** del sistema —
-Administrador, Coordinador, Supervisor, Analista y Responsable.
-Los dos primeros del grupo técnico del IPN; los tres restantes del
-grupo operativo del cliente.
+A la izquierda identificamos los **cinco roles operativos y técnicos** que interactúan con el sistema. 
 
-> *[Señalar el centro]*
+Al centro se sitúa el núcleo de PICIS-nube, donde se implementan los componentes lógicos de Zero Trust: el motor de políticas, el administrador y el punto de aplicación de políticas.
 
-Al centro, **PICIS sobre GCP bajo Zero Trust**. Sus componentes:
-*scraping* autorizado, separador de metadatos, segmentador,
-filtrado, el **clasificador NLP/IA**, y el reportador. Más los tres
-componentes del patrón Zero Trust del NIST: Policy Engine, Policy
-Administrator y Policy Enforcement Point.
-
-> *[Señalar la derecha]*
-
-A la derecha, los servicios gestionados de GCP que sostienen al
-sistema — Cloud Identity para identidades federadas, Sensitive Data
-Protection como insumo de preclasificación — y el sistema externo:
-los **portales institucionales** sobre los que PICIS hace *scraping*
-autorizado.
-
-Diego, sigues con el nivel dos.
+A la derecha se muestran las integraciones de infraestructura: las identidades federadas mediante Cloud Identity, Sensitive Data Protection como insumo de clasificación y, finalmente, los portales web bajo seguimiento.
 
 ---
 
 ## Slide 22 — Catálogo de 22 controles · 45s
 
-> *[Transición: Entras después de Diego en el slide 21]*
+> *[Contacto visual]*
 
-El entregable central del OP-2 es el **catálogo de 22 controles**
-agrupado en tres familias.
+Para llegar a las salvaguardas del proyecto, realizamos un proceso de filtrado de los controles del NIST SP 800-53, seleccionando y personalizando aquellos aplicables de forma puramente preventiva.
 
-**Confidencialidad** — ocho controles, del C-001 al C-008. Cifrado en
-reposo con CMEK (Customer-Managed Encryption Keys), cifrado en
-tránsito con TLS 1.3, autenticación multifactor, acceso contextual,
-perímetros lógicos con VPC Service Controls.
+El catálogo resultante consta de **22 controles organizados en tres familias**:
 
-**Integridad** — siete controles, del I-001 al I-007. Inventario
-automático de activos, firmas SHA-256, logs inmutables, firma
-criptográfica de imágenes de contenedor.
+Ocho controles en **Confidencialidad**, orientados al cifrado bajo llaves de la institución y acceso contextual. 
 
-**Privacidad** — siete controles, del P-001 al P-007. Clasificación
-con SDP, minimización por finalidad, enmascaramiento dinámico,
-consentimiento y PIA.
+Siete controles en **Integridad**, destinados a proteger las bitácoras y a firmar criptográficamente las imágenes de los contenedores antes de su ejecución.
 
-> *[Contacto visual · énfasis]*
+Y siete controles en **Privacidad**, dedicados al enmascaramiento dinámico de datos y análisis de impacto.
 
-Tres cosas a destacar del catálogo: cada control tiene un **criterio
-de aceptación medible** — no es declaración de intención. Cada
-control está **mapeado** a una subcategoría NIST y a un artículo
-mexicano. Y la distribución 8-7-7 no es casual: refleja el balance
-entre las tres dimensiones del esquema.
-
-Miguel, sigues con el PIA.
+La aportación clave de este catálogo es que cada control cuenta con un criterio de aceptación técnico y medible, eliminando ambigüedades en su validación.
 
 ---
 
 ## Slide 25 — Cronograma de actividades — TT2 · 50s
 
-> *[Transición: Entras después de Diego en el slide 24]*
+> *[Pausa breve · contacto visual]*
 
-Para cerrar, **el cronograma de trabajo de TT2**. Lo organizamos en
-tres bloques de actividades.
+Para finalizar, presentamos la planeación de la segunda fase del Trabajo Terminal, orientada a llevar este diseño a la demostración práctica. El cronograma se divide en tres bloques de actividades:
 
-Primero, **aprovisionamiento declarativo** del proyecto productivo
-en GCP. Esto significa que todo el entorno — proyecto, redes,
-identidades, perímetros, almacenamiento — se levanta con código
-reproducible. Es la base sobre la cual se ejecutarán las pruebas.
+El primer bloque corresponde al **aprovisionamiento declarativo** del entorno en Google Cloud. Levantaremos de forma automatizada y mediante código las redes, proyectos y perímetros de seguridad.
 
-Segundo, **ejecución de la matriz de pruebas**. Un caso por cada
-uno de los 22 controles, con criterio numérico de aceptación y
-evidencia material de ejecución. Esto cierra el OP-4.
+El segundo bloque abarca la **ejecución de la matriz de pruebas**, documentando la evidencia material del comportamiento de cada uno de los 22 controles ante incidentes.
 
-Tercero, **auditoría inversa**: verificar que cada artículo legal
-aplicable es satisfecho por al menos un control con evidencia
-material. Es la validación final de la trazabilidad bidireccional
-que construimos en TT1.
+Y el tercer bloque cierra con la **auditoría de cumplimiento inverso**, verificando que cada obligación de la ley mexicana esté efectivamente cubierta por una evidencia de ciberseguridad en la nube.
 
-> *[Ritmo pausado · contacto visual]*
-
-En resumen: TT1 diseña; TT2 demuestra.
-
-Miguel, cierras tú.
+De esta forma, cerramos el ciclo: TT1 diseña e investiga; TT2 implementa y demuestra.
 
 ---
 
 ## Slide 26 — Gracias · Cierre conjunto
 
-> *[Junto con Miguel y Diego · centro del escenario]*
+> *[Te incorporas al centro junto con Miguel y Diego]*
 
 Muchas gracias por su atención.
-
----
-
-## Notas finales para Carlos
-
-1. **Tu valor es la estructura.** "Cinco roles", "cuatro marcos",
-   "cinco etapas", "tres familias" — esas anclas numéricas le dan
-   al público una geografía mental clara. No las sacrifiques.
-2. **Slide 08 (objetivo) — el ajuste *implementar → diseñar* y el
-   «para qué» pendiente.** Ese es tu momento de honestidad académica.
-   No lo escondas, no lo apresures. Es lo que el director quiere
-   ver: autoconciencia del estado real del proyecto.
-3. **Slide 25 (cronograma) — los tres bloques son tu cierre.**
-   Termina con "TT1 diseña, TT2 demuestra". Es la frase que el
-   sinodal se va a llevar.
-4. **Si te preguntan por la metodología del estado del arte,**
-   recuerda: matriz bibliográfica (Producto 6) + matriz analítica
-   de contenido (Producto 7). Cuatro dimensiones por trabajo:
-   herramientas, métricas, marco conceptual, brecha.
