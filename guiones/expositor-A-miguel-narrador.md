@@ -2,7 +2,7 @@
 
 > **Rol:** Abre la presentación, conecta el problema humano con el técnico, aterriza la legislación, narra el proceso de investigación y diseño (estado del arte, brecha, flujo Zero Trust, PIA).
 >
-> **Diapositivas asignadas:** 01, 02, 05, 10, 12, 16, 20, 23, 26
+> **Diapositivas asignadas:** 01, 02, 05, 11, 13, 17, 21, 24, 27
 >
 > **Tiempo objetivo total:** ~5:30 min
 >
@@ -48,7 +48,7 @@ Un criterio de diseño fundamental en esta investigación es la **intervención 
 
 ---
 
-## Slide 10 — Estado del arte · 55s
+## Slide 11 — Estado del arte · 55s
 
 > *[Señalar la tabla del slide]*
 
@@ -62,7 +62,7 @@ Definimos seis ejes de análisis transversal para evaluar el nivel de protecció
 
 ---
 
-## Slide 12 — Legislación mexicana · 50s
+## Slide 13 — Legislación mexicana · 50s
 
 > *[Énfasis · contacto visual]*
 
@@ -74,11 +74,11 @@ Esta exigencia legal moldeó el flujo lógico de nuestro clasificador, garantiza
 
 ---
 
-## Slide 16 — Brecha activo a activo · 55s
+## Slide 17 — Brecha activo a activo · 55s
 
 > *[Señalar la tabla]*
 
-Para aterrizar el diseño preventivo, realizamos un análisis de brechas exhaustivo, comparando **activo por activo** el estado actual de la versión local de PICIS frente al entorno objetivo en la nube.
+Para de veras aterrizar el diseño preventivo, realizamos un análisis de brechas exhaustivo, comparando **activo por activo** el estado actual de la versión local de PICIS frente al entorno objetivo en la nube.
 
 Este proceso de análisis de riesgos e inventariado nos permitió determinar las vulnerabilidades críticas del esquema local y proyectar sus contramedidas.
 
@@ -88,21 +88,21 @@ Esta caracterización detallada de la brecha se encuentra documentada en el Anex
 
 ---
 
-## Slide 20 — Flujo de autorización Zero Trust · 60s
+## Slide 21 — Flujo de autorización Zero Trust · 60s
 
 > *[Pausa breve · contacto visual amplio]*
 
 El resultado más importante de nuestro análisis de arquitectura es este flujo preventivo unificado, el cual concreta la teoría de Zero Trust.
 
-Para modelar este flujo de **once pasos**, partimos del estándar NIST SP 800-207. Evaluamos cómo interactúan los componentes de decisión y aplicación de políticas sobre los servicios de Google Cloud.
+El proceso de diseño consistió en trazar el ciclo de vida de una petición HTTP individual a través de cuatro capas funcionales para instrumentar una verificación continua basada en el estándar NIST SP 800-207. 
 
-El principio de diseño es **deny by default** (denegar por defecto): cada paso del flujo, desde el balanceador de carga hasta el perímetro cerrado de datos, verifica la identidad y el contexto del cliente de forma independiente. Si una sola validación falla, la petición se bloquea de inmediato. 
+El principio fundamental es **deny by default** (denegar por defecto): cada paso del flujo, desde el balanceador de carga hasta el perímetro cerrado de datos, verifica la identidad y el contexto de forma independiente. Si una sola validación falla, la petición se interrumpe de inmediato en la capa de ingreso, bloqueando el acceso al backend. 
 
-El flujo cierra en el paso once con un repositorio de auditoría inmutable bajo almacenamiento WORM (Write Once, Read Many), garantizando que ningún registro pueda ser alterado.
+El flujo cierra en el paso once con un repositorio de auditoría inmutable bajo almacenamiento WORM, garantizando la inalterabilidad de los registros.
 
 ---
 
-## Slide 23 — PIA del clasificador · 50s
+## Slide 24 — PIA del clasificador · 50s
 
 > *[Énfasis]*
 
@@ -116,8 +116,8 @@ En el bloque siete determinamos que, tras la aplicación del catálogo de contro
 
 ---
 
-## Slide 26 — Gracias · Cierre conjunto
+## Slide 27 — Gracias · Cierre conjunto
 
 > *[Te incorporas al centro junto con Diego y Carlos · centro del escenario]*
 
-Muchas gracias por su atención. Quedamos a sus órdenes para la sesión de preguntas.
+Muchas gracias por su atención. Quedamos a sus ordenes para la sesión de preguntas.

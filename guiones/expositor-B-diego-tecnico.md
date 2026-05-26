@@ -2,7 +2,7 @@
 
 > **Rol:** Se enfoca en la transición tecnológica de PICIS, métricas de privacidad, arquitectura de contenedores y justificación técnica en la nube.
 >
-> **Diapositivas asignadas:** 06, 07, 13, 14, 17, 19, 21, 24, 26
+> **Diapositivas asignadas:** 06, 07, 14, 15, 18, 20, 22, 25, 27
 >
 > **Tiempo objetivo total:** ~5:00 min
 >
@@ -22,7 +22,7 @@ PICIS está migrando a su versión 2 en la nube, bajo el paradigma de privacidad
 
 > *[Señalar la tabla del slide]*
 
-El diseño de esta transición parte de redefinir la arquitectura local de la versión 1. Mientras que antes dependíamos de servidores físicos y credenciales estáticas locales, la versión 2 evoluciona hacia una infraestructura gestionada en Google Cloud, con un perímetro lógico Zero Trust, identidades federadas libres de claves y auditoría inmutable.
+El diseño de esta transición parte de redefinir la arquitectura local de la versión 1. Mientras que antes se dependía de servidores físicos y credenciales estáticas locales, la versión 2 evoluciona hacia una infraestructura gestionada en Google Cloud, con un perímetro lógico Zero Trust, identidades federadas libres de claves y auditoría inmutable.
 
 > *[Contacto visual · Énfasis]*
 
@@ -42,13 +42,13 @@ Segundo: Las identidades de los microservicios no pueden usar claves estáticas.
 
 Tercero: El cumplimiento legal se reconfigura, pues la legislación mexicana exige protección de datos de manera explícita en el cómputo en la nube.
 
-Nuestro esquema de seguridad mitiga estos tres frentes de forma integrada.
+Nuestro esquema de seguridad mitiga estas tres áreas de forma integrada.
 
 ---
 
-## Slide 13 — Métrica F-beta · 40s
+## Slide 14 — Métrica F-beta · 40s
 
-> *[Transición: Entras después de la intervención de Miguel en el slide 12]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 13]*
 
 Un elemento clave de la investigación fue seleccionar la métrica de rendimiento adecuada para el clasificador. Evaluamos diversas métricas y adoptamos F-beta con beta igual a 2, que es el estándar de la industria para el descubrimiento de información sensible.
 
@@ -62,11 +62,11 @@ Esta métrica constituye el criterio de aceptación para las pruebas de la segun
 
 ---
 
-## Slide 14 — Por qué GCP · 50s
+## Slide 15 — Por qué GCP · 50s
 
 > *[Ritmo seguro · Explicación analítica]*
 
-La selección de la nube no fue arbitraria; evaluamos de manera sistemática a GCP (Google Cloud Platform) frente a AWS y Azure bajo cinco criterios técnicos específicos. GCP sobresalió en tres áreas clave:
+La selección de la nube no fue arbitraria; evaluamos de manera sistemática a GCP (Google Cloud Platform) frente a AWS y Azure bajo criterios técnicos específicos. GCP sobresalió en tres áreas clave:
 
 Uno: Control de acceso Zero Trust nativo mediante IAP (Identity-Aware Proxy) y políticas de contexto.
 
@@ -78,9 +78,9 @@ El resultado de esta evaluación nos demostró que Google Cloud ofrece la infrae
 
 ---
 
-## Slide 17 — Requisitos · 45s
+## Slide 18 — Requisitos · 45s
 
-> *[Transición: Entras después de la intervención de Miguel en el slide 16]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 17]*
 
 Para llegar a la formulación de los requisitos funcionales y no funcionales, realizamos un proceso de mapeo a partir de las brechas de seguridad identificadas. Estructuramos 12 requisitos funcionales y 10 no funcionales, con criterios de aceptación medibles.
 
@@ -96,45 +96,45 @@ El catálogo completo está detallado en el Anexo A.
 
 ---
 
-## Slide 19 — C4 Nivel 2 · Contenedores · 60s
+## Slide 20 — C4 Nivel 2 · Contenedores · 60s
 
 > *[Señalar el diagrama C4]*
 
-El modelado de esta arquitectura en cinco planos lógicos fue el resultado de un proceso iterativo de diseño buscando el aislamiento de la superficie de ataque del clúster:
+El modelado de esta arquitectura en cinco planos lógicos fue el resultado de un proceso iterativo de diseño buscando el aislamiento de la superficie de ataque del clúster. Diseñamos estos cinco planos lógicos apilados de forma vertical para romper con el modelo de red plana tradicional.
 
-El Plano de Ingreso: Donde el balanceador de carga colabora con IAP (Identity-Aware Proxy) para firmar un token de identidad y validar el contexto antes de tocar la red interna.
+El Plano de Ingreso: Donde el balanceador de carga trabaja junto a IAP (Identity-Aware Proxy) para firmar un token de identidad y validar el contexto (ACM) antes de tocar la red interna.
 
-El Plano de Aplicación: Ubicado en un clúster privado de GKE (Google Kubernetes Engine), donde residen el recolector y el clasificador, interactuando sin contraseñas gracias a las identidades federadas.
+El Plano de Aplicación: Ubicado en un clúster privado de GKE, donde residen el scraper y el clasificador, interactuando sin contraseñas gracias a las identidades federadas.
 
-El Plano de Datos: Protegido dentro de un perímetro lógico cerrado mediante VPC Service Controls para evitar fugas de información, almacenando los datos cifrados con llaves gestionadas por la institución.
+El Plano de Datos: Protegido dentro de un perímetro cerrado mediante VPC Service Controls para evitar fugas de información, almacenando los datos cifrados con llaves KMS de la institución.
 
-Finalmente, los planos transversales de Control y de Ciclo de Vida de Software garantizan que solo imágenes de contenedores firmadas y verificadas puedan ser desplegadas.
+Finalmente, los planos transversales de Control y de Ciclo de Vida de Software garantizan que solo imágenes de contenedores firmadas y verificadas (Cosign + Binary Authorization) puedan ser desplegadas en producción.
 
 ---
 
-## Slide 21 — Diseño · Clasificador NLP/IA · 50s
+## Slide 22 — Diseño · Clasificador NLP/IA · 50s
 
 > *[Señalar el diagrama del clasificador]*
 
 Descendemos un nivel más en la arquitectura para analizar el clasificador, el componente más sensible por interactuar directamente con los datos.
 
-El diseño de este pipeline de procesamiento responde a la necesidad de asegurar que el flujo de procesamiento de lenguaje natural cumpla estrictamente con el Artículo 22 de la Ley de Datos Personales (LGPDPPSO). 
+Diseñamos su arquitectura como un pipeline secuencial de 5 etapas (separador, segmentador, filtrado, clasificador NLP/IA y reporteador) para procesar e identificar de manera granular los datos de carácter PII. Este diseño responde directamente a la necesidad de que el flujo de procesamiento de lenguaje natural cumpla estrictamente con el Artículo 22 de la Ley de Datos Personales (LGPDPPSO).
 
 > *[Contacto visual directo con el jurado · Ritmo pausado]*
 
-Esto determinó que el sistema no tomara decisiones automatizadas definitivas. El clasificador genera una preclasificación y es el Analista humano quien valida y confirma los incidentes en la consola. Toda la trazabilidad de esta interacción se registra en registros de auditoría inmutables.
+Esto determinó que el sistema no tomara decisiones automatizadas definitivas. El clasificador genera una preclasificación y es el Analista humano quien valida y confirma los incidentes en la consola. Toda la trazabilidad de esta interacción y sus llaves de cifrado CMEK se integran de forma nativa.
 
 ---
 
-## Slide 24 — Conclusiones · 50s
+## Slide 25 — Conclusiones · 50s
 
-> *[Transición: Entras después de la intervención de Miguel en el slide 23]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 24]*
 
 Como resultados de esta etapa de investigación de TT1, cumplimos tres de los cuatro objetivos particulares:
 
 Primero, el OP-1: Caracterizamos la brecha de seguridad asociando cada activo crítico a un control objetivo.
 
-Segundo, el OP-2: Diseñamos los 22 controles de confidencialidad, integridad y privacidad bajo el marco NIST CSF (Cybersecurity Framework) 2.0.
+Segundo, el OP-2: Diseñamos los 22 controles de confidencialidad, integridad y privacidad bajo el marco NIST CSF 2.0.
 
 Tercero, el OP-3: Creamos el mapeo legal entre la normativa mexicana y los controles técnicos.
 
@@ -144,7 +144,7 @@ El mayor valor de esta fase de diseño es la trazabilidad bidireccional: ante un
 
 ---
 
-## Slide 26 — Gracias · Cierre conjunto
+## Slide 27 — Gracias · Cierre conjunto
 
 > *[Te incorporas al centro junto con Miguel y Carlos]*
 

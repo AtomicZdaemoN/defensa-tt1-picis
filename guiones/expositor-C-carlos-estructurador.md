@@ -2,9 +2,9 @@
 
 > **Rol:** Define conceptos, encuadra el marco legal, formaliza los objetivos de la investigación y la metodología, y presenta el catálogo de controles y el cronograma para la fase práctica (TT2).
 >
-> **Diapositivas asignadas:** 03, 04, 08, 09, 11, 15, 18, 22, 25, 26
+> **Diapositivas asignadas:** 03, 04, 08, 09, 10, 12, 16, 19, 23, 26, 27
 >
-> **Tiempo objetivo total:** ~6:30 min
+> **Tiempo objetivo total:** ~7:00 min
 >
 > **Notas de estilo:**
 > - Sin guías de pronunciación fonética.
@@ -42,21 +42,35 @@ Por lo tanto, la migración de PICIS a la nube no es sólo un reto técnico, sin
 
 ---
 
-## Slide 08 — Objetivo general · 55s
+## Slide 08 — Contexto Académico · Programa Sintético · 40s
 
-> *[Ritmo pausado · señalar el objetivo en pantalla]*
+> *[Señalar el documento del Programa Sintético en pantalla]*
 
-El objetivo general aprobado originalmente en nuestro protocolo de investigación establece: *implementar un esquema preventivo unificado para ofrecer privacidad, confidencialidad e integridad de los datos sensibles de la versión en nube de PICIS...*
+Para contextualizar las decisiones de diseño del proyecto ante la dirección y los sinodales, incorporamos el Programa Sintético oficial de la unidad de aprendizaje de Trabajo Terminal I de la Licenciatura en Ciencia de Datos.
 
-> *[Señalar el ajuste en pantalla]*
+El programa establece formalmente que el propósito de esta unidad de aprendizaje es desarrollar la **primera fase** de un proyecto de cómputo viable y factible con base en metodologías y técnicas de desarrollo de sistemas.
 
-Como se aprecia en la diapositiva, proponemos formalmente un **ajuste en el verbo principal para la fase final del proyecto: cambiar "implementar" por "diseñar"**. Este ajuste refleja con honestidad académica el alcance real de esta primera etapa: el diseño completo del catálogo de controles, el análisis de brechas y el análisis de impacto. La implementación operativa y pruebas de los controles corresponden por definición a la fase de TT2.
+> *[Contacto visual]*
 
-Asimismo, queremos señalar que el **«para qué» del objetivo queda pendiente de redacción definitiva**. Debido a que el proyecto se encuentra en pleno desarrollo académico, el impacto y beneficio final se consolidarán una vez concluidas las pruebas de funcionamiento en la siguiente etapa.
+Esto sustenta metodológicamente que el alcance de TT1 se defina en el análisis de brechas, el diseño y el modelado de la arquitectura de seguridad y privacidad, mientras que el aprovisionamiento físico y la validación operativa se reservan para la segunda fase en TT2. Esta delimitación académica justifica plenamente la propuesta de ajuste en el objetivo general que veremos a continuación.
 
 ---
 
-## Slide 09 — Objetivos particulares · 40s
+## Slide 09 — Objetivo general · 55s
+
+> *[Ritmo pausado · señalar las tarjetas en pantalla]*
+
+El objetivo general aprobado originalmente en nuestro protocolo de investigación establece: *implementar un esquema preventivo unificado para ofrecer privacidad, confidencialidad e integridad de los datos sensibles...*
+
+> *[Señalar la tarjeta del objetivo ajustado en pantalla]*
+
+Como se aprecia en la diapositiva, mostramos de forma paralela la declaración original y el **ajuste académico propuesto: cambiar "implementar" por "diseñar"**. Este cambio refleja con precisión el alcance real de esta primera etapa: el diseño del catálogo de controles y de la arquitectura de software. La implementación operativa y pruebas de los controles corresponden a la fase de TT2.
+
+Asimismo, señalamos que el **«para qué» del objetivo queda pendiente de redacción definitiva** en virtud de que el proyecto se encuentra en pleno desarrollo académico; el impacto y beneficio final se consolidarán al concluir las pruebas de funcionamiento en la siguiente etapa.
+
+---
+
+## Slide 10 — Objetivos particulares · 40s
 
 > *[Contacto visual]*
 
@@ -72,7 +86,7 @@ Y finalmente, el **OP-4**: Validar el funcionamiento operativo mediante una matr
 
 ---
 
-## Slide 11 — Cuatro marcos del NIST · 45s
+## Slide 12 — Cuatro marcos del NIST · 45s
 
 > *[Explicación analítica]*
 
@@ -88,7 +102,7 @@ Y el **NIST SP 800-207** nos brindó las pautas de arquitectura Zero Trust para 
 
 ---
 
-## Slide 15 — Metodología · 45s
+## Slide 16 — Metodología · 45s
 
 > *[Ritmo continuo]*
 
@@ -102,23 +116,23 @@ La etapa cinco, que abarca el aprovisionamiento automatizado en la nube y la eje
 
 ---
 
-## Slide 18 — Arquitectura C4 nivel 1 · 50s
+## Slide 19 — Arquitectura C4 nivel 1 · 55s
 
 > *[Señalar el diagrama de contexto]*
 
 Para modelar la arquitectura y comunicar la superficie de ataque del sistema a los sinodales, adoptamos la notación **C4**, ya que permite descomponer el diseño de lo general a lo específico sin perder de vista los roles del sistema.
 
-Este nivel uno representa el diagrama de contexto:
+Este nivel uno representa el diagrama de contexto. El proceso de diseño partió de la arquitectura local on-premise para segregar los roles operativos de los de administración, mapeando las interfaces de seguridad y los bloques del motor de políticas del NIST directamente en el núcleo del sistema.
 
 A la izquierda identificamos los **cinco roles operativos y técnicos** que interactúan con el sistema. 
 
 Al centro se sitúa el núcleo de PICIS-nube, donde se implementan los componentes lógicos de Zero Trust: el motor de políticas, el administrador y el punto de aplicación de políticas.
 
-A la derecha se muestran las integraciones de infraestructura: las identidades federadas mediante Cloud Identity, Sensitive Data Protection como insumo de clasificación y, finalmente, los portales web bajo seguimiento.
+A la derecha se muestran las integraciones de infraestructura: las identidades federadas mediante Cloud Identity, Sensitive Data Protection como insumo de clasificación y, finalmente, los portales web bajo scraping autorizado.
 
 ---
 
-## Slide 22 — Catálogo de 22 controles · 45s
+## Slide 23 — Catálogo de 22 controles · 45s
 
 > *[Contacto visual]*
 
@@ -136,7 +150,7 @@ La aportación clave de este catálogo es que cada control cuenta con un criteri
 
 ---
 
-## Slide 25 — Cronograma de actividades — TT2 · 50s
+## Slide 26 — Cronograma de actividades — TT2 · 50s
 
 > *[Pausa breve · contacto visual]*
 
@@ -152,7 +166,7 @@ De esta forma, cerramos el ciclo: TT1 diseña e investiga; TT2 implementa y demu
 
 ---
 
-## Slide 26 — Gracias · Cierre conjunto
+## Slide 27 — Gracias · Cierre conjunto
 
 > *[Te incorporas al centro junto con Miguel y Diego]*
 
