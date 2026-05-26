@@ -1,243 +1,123 @@
 # Guion · Miguel — Narrador / Conector
 
-> **Rol:** abre la presentación, conecta lo humano con lo técnico, aterriza
-> la legislación y narra los momentos clave.
+> **Rol:** Abre la presentación, conecta el problema humano con el técnico, aterriza la legislación, narra el proceso de investigación y diseño (estado del arte, brecha, flujo Zero Trust, PIA).
 >
-> **Slides:** 1, 2, 5, 10, 12, 16, 20, 23, 26
+> **Diapositivas asignadas:** 01, 02, 05, 10, 12, 16, 20, 23, 26
 >
-> **Tiempo objetivo:** ~6:30 min (≈9 slides · 40-50s c/u)
+> **Tiempo objetivo total:** ~5:30 min
 >
-> **Filosofía:** la exposición es teaser. La defensa real está en la Q&A.
-> Decir lo necesario, no más. Si los sinodales quieren más detalle, lo
-> piden.
+> **Notas de estilo:**
+> - Sin guías de pronunciación fonética.
+> - Notas entre corchetes para acciones no verbales (`[Señalar...]`, `[Contacto visual...]`).
+> - Se eliminaron las transiciones habladas de relevo ("a continuación", "le paso la palabra"). La transición es implícita al cambiar el slide.
+> - Foco en el **proceso de investigación**: cómo se llegó a cada resultado y las decisiones de diseño tomadas por el equipo.
 
 ---
 
 ## Slide 01 — Portada · 30s
 
-Buenos días. Mi nombre es **Miguel Arturo Romero Carreón**, y junto con
-**Diego Alejandro Leyva García** y **Carlos Uriel Francisco López**
-presentamos la defensa del Trabajo Terminal **2026-B182**.
+> *[Apertura · contacto visual amplio · los tres expositores al frente]*
 
-> *[pausa]*
+Muy buenos días. Mi nombre es Miguel Arturo Romero Carreón, y junto con Diego Alejandro Leyva García y Carlos Uriel Francisco López presentamos la defensa del Trabajo Terminal en la modalidad de **Investigación** número **2026-B182**.
 
-Nuestro trabajo se titula *Esquema preventivo de privacidad para PICIS en
-la versión de nube basado en la arquitectura Zero Trust*. Lo dirigen el
-**Dr. Eleazar Aguirre Anaya** y la **Dra. Nidia Asunción Cortez Duarte**.
+> *[Pausa breve]*
 
-> *[pausa breve · contacto visual]*
-
-Cedo la palabra a **Carlos**, que va a abrir con el contexto del problema.
+El trabajo lleva por título *Esquema preventivo de privacidad para PICIS en la versión de nube basado en la arquitectura Zero Trust*. Está dirigido por el Dr. Eleazar Aguirre Anaya y la Dra. Nidia Asunción Cortez Duarte.
 
 ---
 
-## Slide 02 — Datos sensibles publicados por error · 50s
+## Slide 02 — Datos sensibles publicados por error · 45s
 
-> *[Después de que Carlos termine las slides 03 y 04 — definición y marco legal]*
+> *[Entonación reflexiva · contacto visual con el jurado]*
 
-Gracias, Carlos. Con ese marco claro, déjenme aterrizar el problema real.
+Para entender este proyecto, debemos partir del problema humano y operativo. Las instituciones públicas y privadas publican miles de documentos diariamente en sus portales de transparencia. Un porcentaje crítico de estos archivos contiene, de forma inadvertida, datos personales y sensibles expuestos: desde nombres asociados a CURP hasta expedientes médicos y cuentas bancarias.
 
-Las instituciones públicas y privadas publican miles de documentos en sus
-portales todos los días. Una proporción no menor contiene, **sin
-advertirlo**, información sensible: nombres con CURP, expedientes
-médicos, números de cuenta.
-
-> *[bajar voz]* Esto no es hipotético. Pasa constantemente.
-
-Revisar todo eso a mano es inviable. Por eso existe **PICIS** — la
-Plataforma de Identificación, Clasificación y Monitoreo de Información
-Sensible. Desarrollada en el Laboratorio de Ciberseguridad del CIC-IPN.
-Automatiza esa detección con web scraping autorizado y un clasificador
-NLP/IA con taxonomía de 55 tipos en 10 categorías.
-
-**Carlos**, te paso la palabra para definir formalmente qué es un dato
-personal.
+Revisar este volumen de información a mano es inviable. Por ello, en el Laboratorio de Ciberseguridad del CIC-IPN se concibió **PICIS**, un sistema que realiza búsquedas automatizadas sobre portales autorizados utilizando un clasificador de lenguaje natural para identificar y preclasificar incidentes de privacidad.
 
 ---
 
-## Slide 05 — Por qué nació PICIS · 45s
+## Slide 05 — Por qué nació PICIS · 40s
 
-> *[Después de slides 03 y 04 de Carlos]*
+> *[Ritmo explicativo]*
 
-Bien. Ya con la teoría clara, ¿por qué nace PICIS?
+La motivación del diseño parte de una realidad operativa: la verificación de la privacidad no escala de forma manual. 
 
-Porque revisar a mano si una institución publicó por error datos
-sensibles en sus portales es **titánico** — miles de PDFs, hojas de
-cálculo, imágenes con texto. No escala.
+Al modelar PICIS, el equipo del CIC-IPN integró cuatro componentes para automatizar la detección: recolección de documentos, extracción de metadatos, segmentación de texto y un clasificador con una taxonomía de 55 tipos de datos.
 
-PICIS automatiza esa identificación con cuatro piezas: scraping
-periódico sobre dominios autorizados, NLP, IA para clasificación, y
-ciencia de datos para el análisis del corpus. Y algo crítico: **la
-clasificación no es completamente automática**. El rol del Analista
-valida cada hallazgo antes de registrarlo como incidente confirmado.
-
-> *[transición a Diego]*
-
-**Diego**, te paso la palabra para contar qué pasa cuando movemos PICIS
-a la nube.
+Un criterio de diseño fundamental en esta investigación es la **intervención humana significativa**: el clasificador no toma decisiones autónomas; genera una preclasificación que un Analista de seguridad debe validar y confirmar.
 
 ---
 
-## Slide 10 — Estado del arte · 50s
+## Slide 10 — Estado del arte · 55s
 
-> *[Después de slides 06-09 de Diego y Carlos]*
+> *[Señalar la tabla del slide]*
 
-Antes de diseñar el esquema, revisamos qué existe. Analizamos
-**23 trabajos** agrupados en seis ejes: Zero Trust en GCP, NLP de PII,
-PIA con IA, conformidad mexicana, CMEK multi-tenant, y federación sin
-claves estáticas.
+Para consolidar la base de esta investigación, realizamos un proceso de revisión sistemática del estado del arte, siguiendo la metodología recomendada por la dirección del trabajo.
 
-> *[contacto visual · ritmo pausado]*
+El proceso implicó analizar 23 fuentes —estándares NIST, soluciones comerciales y artículos científicos—. Construimos primero una **matriz bibliográfica** y, posteriormente, una **matriz analítica de contenido** para contrastar cada propuesta bajo cuatro dimensiones: herramientas, métricas, marco conceptual y brechas.
 
-Lo que encontramos es contundente: **ninguno cubre los seis ejes a la
-vez**. NIST 800-207 cubre Zero Trust pero no NLP. Presidio cubre NLP
-pero no ley mexicana. Workload Identity Federation resuelve claves pero
-no clasifica. Y así con los demás.
+> *[Contacto visual]*
 
-> *[señalar última fila]*
-
-La última fila de la tabla es nuestro trabajo. Único que marca los seis
-ejes. Esto no es coincidencia: identificamos esta brecha de integración
-en la literatura y la convertimos en nuestro punto de partida.
-
-**Carlos**, te paso la palabra para los marcos teóricos del NIST.
+Definimos seis ejes de análisis transversal para evaluar el nivel de protección de datos en la nube. Como muestra la tabla, concluimos que **ningún trabajo cubre la totalidad de los ejes**. Esta carencia de una integración unificada de controles preventivos es la brecha de investigación que resolvemos en este Trabajo Terminal.
 
 ---
 
-## Slide 12 — Legislación mexicana · 55s
+## Slide 12 — Legislación mexicana · 50s
 
-> *[Después de slide 11 — NIST de Carlos]*
+> *[Énfasis · contacto visual]*
 
-Gracias, Carlos. Ahora la otra mitad del marco: la ley mexicana.
+El sustento normativo del esquema preventivo se construyó mediante el análisis sistemático de la legislación mexicana, estructurado en tres capas: la ley federal para el sector privado, la ley general para los sujetos obligados del sector público, y los lineamientos del INAI.
 
-México tiene dos leyes principales. La **LFPDPPP** regula al sector
-privado. Y la **LGPDPPSO** al sector público — incluyendo al IPN. Más
-el Reglamento de la LFPDPPP, que define cómo aplica todo al cómputo en
-la nube.
+Durante este proceso de análisis, identificamos el **Artículo 22 de la Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados (LGPDPPSO)** como una restricción de diseño crítica. Dicho artículo prohíbe que las decisiones basadas en el tratamiento automatizado de datos se realicen sin intervención y explicación humana. 
 
-> *[intensificar · contacto visual]*
-
-Pero hay un artículo que quiero que tengan presente toda la
-presentación: el **artículo 22 de la LGPDPPSO**. Dice que las
-**decisiones automatizadas** que afecten al titular tienen que ser
-**explicables** y contar con **validación humana significativa**.
-
-Esto es decisivo porque PICIS usa un clasificador de IA. Cada vez que
-dice "este documento tiene datos sensibles", esa decisión tiene que
-explicarse y un humano debe validarla. Lo vamos a ver realizado en el
-diseño.
-
-**Diego**, sigues con la métrica del clasificador.
+Esta exigencia legal moldeó el flujo lógico de nuestro clasificador, garantizando que el sistema siempre actúe como un asistente del Analista humano y nunca de forma autónoma.
 
 ---
 
-## Slide 16 — Brecha activo a activo · 50s
+## Slide 16 — Brecha activo a activo · 55s
 
-> *[Después de slides 13-15 de Diego y Carlos]*
+> *[Señalar la tabla]*
 
-Recuerden nuestro OP-1: caracterizar la brecha entre el on-premise y la
-nube. Esa brecha está aquí, **activo por activo**.
+Para aterrizar el diseño preventivo, realizamos un análisis de brechas exhaustivo, comparando **activo por activo** el estado actual de la versión local de PICIS frente al entorno objetivo en la nube.
 
-Tres ejemplos que importan:
+Este proceso de análisis de riesgos e inventariado nos permitió determinar las vulnerabilidades críticas del esquema local y proyectar sus contramedidas.
 
-**Identidad de microservicios:** antes claves estáticas en archivos.
-Ahora Workload Identity Federation con tokens de máximo una hora.
+Por ejemplo: las identidades de microservicios, que en la versión local usaban claves estáticas expuestas en archivos, en la nube se sustituyen por identidades federadas de corta duración. Asimismo, el acceso al backend evoluciona de un simple firewall de red a políticas contextuales basadas en Zero Trust. 
 
-**Acceso al backend:** antes firewall de red. Ahora Identity-Aware
-Proxy más Access Context Manager — cada solicitud se verifica sola.
-
-**Decisiones del clasificador:** antes, sin registro de explicabilidad.
-Ahora, trazabilidad completa más validación del Analista, justo como
-exige el artículo 22.
-
-La matriz completa está en el Anexo I del reporte técnico.
-
-**Diego**, te paso la palabra para los requisitos derivados.
+Esta caracterización detallada de la brecha se encuentra documentada en el Anexo I del reporte.
 
 ---
 
-## Slide 20 — Flujo Zero Trust · 60s
+## Slide 20 — Flujo de autorización Zero Trust · 60s
 
-> *[Después de slide 19 — arquitectura de Diego]*
+> *[Pausa breve · contacto visual amplio]*
 
-> *[contacto visual · ritmo pausado]*
+El resultado más importante de nuestro análisis de arquitectura es este flujo preventivo unificado, el cual concreta la teoría de Zero Trust.
 
-Este es el momento clave. Es donde todo lo anterior se vuelve concreto.
+Para modelar este flujo de **once pasos**, partimos del estándar NIST SP 800-207. Evaluamos cómo interactúan los componentes de decisión y aplicación de políticas sobre los servicios de Google Cloud.
 
-Una sola petición del usuario recorre **11 pasos** en cuatro planos:
-ingreso, aplicación, datos y auditoría. **En ningún momento hay
-confianza implícita.** Cada paso verifica de nuevo.
+El principio de diseño es **deny by default** (denegar por defecto): cada paso del flujo, desde el balanceador de carga hasta el perímetro cerrado de datos, verifica la identidad y el contexto del cliente de forma independiente. Si una sola validación falla, la petición se bloquea de inmediato. 
 
-Plano ingreso, pasos 01-05: el Load Balancer termina TLS, Identity-Aware
-Proxy resuelve identidad, Cloud Identity verifica MFA, Access Context
-Manager evalúa red y dispositivo, IAM Conditions verifica el rol.
-
-Plano aplicación, paso 06: el JWT firmado llega al backend en GKE
-privado.
-
-Plano datos, pasos 07-10: Workload Identity intercambia tokens
-cortos, VPC Service Controls valida perímetro, BigQuery enmascara por
-rol, KMS desencripta con CMEK.
-
-> *[bajar voz]*
-
-Y paso 11: **Cloud Audit Logs**. Todo lo anterior queda registrado en
-un Bucket WORM. Nadie lo borra. Nadie lo modifica.
-
-Y si en cualquier punto la MFA es inválida o el contexto está fuera de
-política: HTTP 403, **deny by default**. La petición nunca llega al
-backend.
-
-**Diego**, sigues con el detalle del clasificador.
+El flujo cierra en el paso once con un repositorio de auditoría inmutable bajo almacenamiento WORM (Write Once, Read Many), garantizando que ningún registro pueda ser alterado.
 
 ---
 
 ## Slide 23 — PIA del clasificador · 50s
 
-> *[Después de slide 22 — catálogo de Carlos]*
+> *[Énfasis]*
 
-Vamos a uno de los entregables más importantes de TT1: el **Análisis
-de Impacto a la Privacidad** del clasificador.
+Uno de los principales aportes de este Trabajo Terminal es el **Análisis de Impacto a la Privacidad (PIA)**, el cual diseñamos específicamente para el módulo de clasificación NLP/IA de PICIS.
 
-¿Por qué un PIA? Porque el clasificador trata datos personales de
-forma automatizada. Y, como ya mencioné, el artículo 22 exige
-explicabilidad y validación humana.
+El proceso se estructuró en **siete bloques** metodológicos alineados con el NIST Privacy Framework.
 
-El PIA tiene siete bloques: descripción del tratamiento, categorías
-N1-N4, actores y encargados, finalidad, riesgos R1-R7, controles
-mitigantes, y la **decisión residual**.
+Evaluamos el flujo del pipeline, catalogamos los datos en cuatro niveles de sensibilidad, identificamos siete vectores de riesgo y mapeamos los controles técnicos de mitigación. 
 
-> *[intensificar]*
-
-La decisión residual está documentada: **riesgo medio, mitigar antes
-de producción**. Esa mitigación es exactamente lo que se va a
-demostrar en TT2.
-
-**Diego**, cierras con las conclusiones técnicas.
+En el bloque siete determinamos que, tras la aplicación del catálogo de controles, el nivel de riesgo residual es **medio**. Esto nos permite emitir una recomendación formal de mitigación, la cual servirá de base operativa para las pruebas físicas en la fase de TT2.
 
 ---
 
-## Slide 26 — Gracias · 20s
+## Slide 26 — Gracias · Cierre conjunto
 
-> *[Cierre conjunto · los tres expositores presentes]*
+> *[Te incorporas al centro junto con Diego y Carlos · centro del escenario]*
 
-Muchas gracias por su atención y por su tiempo.
-
-> *[pausa · contacto visual con cada sinodal]*
-
-Quedamos a su disposición para las preguntas.
-
----
-
-## Notas de coaching para Miguel
-
-1. **Eres la narrativa.** Los demás dan datos; tú das significado. Cuando
-   conectas dos slides, el público debe sentir continuidad — no una
-   lista de temas.
-2. **Las pausas son tu herramienta más fuerte.** Después de "ninguno
-   cubre los seis ejes" o de "deny by default": silencio. Deja que
-   aterrice.
-3. **El slide 20 es tu solo.** No lo apures. Es el momento más
-   dramático del deck.
-4. **Si un sinodal interrumpe**, responde con calma y retoma con
-   "decía que...". No te desestabilices.
+Muchas gracias por su atención. Quedamos a sus órdenes para la sesión de preguntas.
