@@ -1634,6 +1634,67 @@
           scroll-behavior: auto;
         }
       }
+
+      /* Rehearsal Timer Floating Widget */
+      .rehearsal-widget {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: rgba(250, 248, 243, 0.85); /* Coherente con var(--paper) */
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
+        border: 1px solid rgba(201, 123, 34, 0.25); /* Sutil acento var(--accent) */
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        z-index: 9999;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--ink-1);
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        min-width: 140px;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        opacity: 1;
+        pointer-events: auto;
+      }
+      
+      .rehearsal-widget.hidden {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+      }
+      
+      .widget-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .widget-label {
+        font-weight: 500;
+        color: var(--ink-mute);
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+      }
+      
+      .widget-time {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--accent);
+      }
+      
+      .widget-help {
+        font-size: 0.55rem;
+        color: var(--ink-mute);
+        text-align: center;
+        margin-top: 0.2rem;
+        border-top: 1px dashed rgba(201, 123, 34, 0.15);
+        padding-top: 0.2rem;
+      }
     </style>
   </head>
   <body>
@@ -3581,6 +3642,7 @@
           this.setupKeyboardNav();
           this.setupTouchNav();
           this.setupDiagramZoom();
+          this.setupRehearsalWidget();
           this.updateProgress();
           this.scrollToCurrent(true);
         }
@@ -3606,6 +3668,86 @@
           if (this.slides[this.current].dataset.slide === "27") {
             this.renderRehearsalSummary();
           }
+        }
+
+        // ---------- Rehearsal widget methods ---------------------------------
+        setupRehearsalWidget() {
+          // Crear widget flotante dinámicamente
+          const widget = document.createElement("div");
+          widget.id = "rehearsal-widget";
+          widget.className = "rehearsal-widget";
+          
+          // Por defecto visible, a menos que el usuario lo haya ocultado explícitamente
+          const visible = localStorage.getItem("rehearsalWidgetVisible") !== "false";
+          if (!visible) {
+            widget.classList.add("hidden");
+          }
+          
+          widget.innerHTML = `
+            <div class="widget-row">
+              <span class="widget-label">Slide:</span>
+              <span id="widget-slide-time" class="widget-time">0:00</span>
+            </div>
+            <div class="widget-row">
+              <span class="widget-label">Total:</span>
+              <span id="widget-total-time" class="widget-time">0:00</span>
+            </div>
+            <div class="widget-help">Presiona "t" para ocultar</div>
+          `;
+          
+          document.body.appendChild(widget);
+          this.widget = widget;
+          
+          // Actualización cada 500ms para precisión en tiempo real
+          this.widgetInterval = setInterval(() => {
+            this.updateRehearsalWidget();
+          }, 500);
+        }
+
+        updateRehearsalWidget() {
+          const slideTimeEl = document.getElementById("widget-slide-time");
+          const totalTimeEl = document.getElementById("widget-total-time");
+          if (!slideTimeEl || !totalTimeEl || !this.widget) return;
+          
+          const currentSlide = this.slides[this.current];
+          const id = currentSlide.dataset.slide;
+          
+          // Ocultar si estamos en el slide 27 (resumen)
+          if (id === "27") {
+            this.widget.style.display = "none";
+            return;
+          } else {
+            this.widget.style.display = "";
+          }
+          
+          if (!id) {
+            slideTimeEl.textContent = "--:--";
+            totalTimeEl.textContent = "--:--";
+            return;
+          }
+          
+          const now = performance.now();
+          const elapsedInCurrent = (now - this.lastEnteredAt) / 1000;
+          const slideAccumulated = this.rehearsal[id] || 0;
+          const currentSlideTotal = slideAccumulated + elapsedInCurrent;
+          
+          let totalAccumulated = 0;
+          for (const [slideId, meta] of Object.entries(SlidePresentation.REHEARSAL_META)) {
+            if (slideId === id) {
+              totalAccumulated += currentSlideTotal;
+            } else {
+              totalAccumulated += (this.rehearsal[slideId] || 0);
+            }
+          }
+          
+          slideTimeEl.textContent = SlidePresentation.fmtTime(currentSlideTotal);
+          totalTimeEl.textContent = SlidePresentation.fmtTime(totalAccumulated);
+        }
+
+        toggleRehearsalWidget() {
+          if (!this.widget) return;
+          const isHidden = this.widget.classList.toggle("hidden");
+          localStorage.setItem("rehearsalWidgetVisible", !isHidden);
         }
 
         // Acumular tiempo del slide que estamos abandonando
@@ -3863,6 +4005,13 @@
                     const diag = active.querySelector(".c4-board, .zt-flow");
                     if (diag) this.openDiagramZoom(diag);
                   }
+                }
+                break;
+              case "t":
+              case "T":
+                if (!e.metaKey && !e.ctrlKey) {
+                  e.preventDefault();
+                  this.toggleRehearsalWidget();
                 }
                 break;
               case "r":
