@@ -90,6 +90,7 @@ jobs:
           cp formal-src/index.html main-deploy/formal/index.html
 
           # Assets (imágenes, fuentes locales, etc.)
+          rm -rf main-deploy/formal/assets
           cp -r formal-src/assets main-deploy/formal/assets
 
           # PDF formal
