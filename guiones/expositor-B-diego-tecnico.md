@@ -1,262 +1,176 @@
-# Guion · Diego — Técnico / Preciso
+# Guion · Diego — Técnico / Preciso y Fluido
 
-> **Rol:** se enfoca en lo técnico con precisión. Transición a nube,
-> problema, métrica, herramientas, arquitectura, cierre técnico.
+> **Rol:** Se enfoca en la transición tecnológica de PICIS, métricas de privacidad, arquitectura de contenedores y justificación técnica en la nube.
 >
-> **Slides:** 6, 7, 13, 14, 17, 19, 21, 24, 26
+> **Diapositivas asignadas:** 06, 07, 13, 14, 17, 19, 21, 24, 26
 >
-> **Tiempo objetivo:** ~6:30 min (≈9 slides · 40-50s c/u)
+> **Tiempo objetivo total:** ~6:00 min (≈9 diapositivas · 40s - 50s promedio por diapositiva)
 >
-> **Filosofía:** precisión sin exceso. Cada palabra técnica debe sonar
-> a dominio, no a memoria. Los detalles que se queden fuera son
-> oportunidades de respuesta en Q&A.
+> **Estrategia de lectura fluida:** 
+> - Las notas entre corchetes **`[LECTURA: ...]`** te indican la pronunciación exacta de siglas técnicas para evitar trabarte.
+> - Las guías de entonación **`[Pausa]`** o **`[Énfasis]`** marcan el ritmo respiratorio para mantener una cadencia profesional y pausada.
+> - Se eliminaron listados densos de herramientas competidoras en inglés; en su lugar, se prioriza explicar el concepto detrás de cada componente.
 
 ---
 
-## Slide 06 — De PICIS v1 a v2 · 45s
+## Slide 06 — De PICIS v1 a v2 · 40s
 
-> *[Después del slide 05 de Miguel]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 05]*
 
-Gracias, Miguel. Como dijiste, PICIS opera hoy en infraestructura local.
-Pero el CIC-IPN está migrándolo a la nube en una nueva versión, **la v2**,
-construida bajo el paradigma *privacy and security by design*. Ese
-escenario es donde vive este Trabajo Terminal.
+Gracias, Miguel. Como bien mencionas, el sistema PICIS opera actualmente en una infraestructura puramente local. Sin embargo, el CIC-IPN ha iniciado la migración hacia una nueva versión en la nube, **la versión 2**, diseñada desde su origen bajo el paradigma de seguridad y privacidad por diseño. Es precisamente en esta fase de transición donde se sitúa nuestro Trabajo Terminal.
 
-> *[señalar tabla del slide]*
+> *[Entonación explicativa · Señalar la tabla en pantalla]*
 
-La diferencia es estructural. La v1: servidores propios, perímetro de
-red físico, claves estáticas, logs locales. La v2: infraestructura
-gestionada en GCP, **perímetro lógico Zero Trust**, federación sin
-claves, auditoría inmutable WORM.
+La diferencia entre ambas versiones es estructural. Mientras la versión 1 depende de servidores locales, perímetros de red físicos, llaves de cifrado estáticas y registros locales; la versión 2 evoluciona hacia una infraestructura gestionada en Google Cloud, un **perímetro lógico basado en Zero Trust**, identidades federadas libres de claves y un sistema de auditoría inmutable y a prueba de alteraciones.
 
-> *[contacto visual]*
+> *[Contacto visual directo con los sinodales · Énfasis]*
 
-No es solo un cambio de dónde viven los servidores. Es un cambio en el
-**modelo de confianza completo**. Por eso surge el problema que voy a
-presentar ahora.
+Esto no es un simple cambio de servidores; representa una reconfiguración completa en el **modelo de confianza del sistema**. Por ello, nos enfrentamos a la problemática que detallaré a continuación.
 
 ---
 
-## Slide 07 — Problemática · 50s
+## Slide 07 — Problemática · 45s
 
-> *[Continuación]*
+> *[Ritmo continuo · Conectando con la diapositiva anterior]*
 
-La v1 opera detrás de un perímetro de red físico. Eso da por hechas
-propiedades de seguridad que en la nube **dejan de cumplirse**.
+Al migrar a la nube, el perímetro de red físico tradicional que protegía a la versión 1 desaparece. Esto disuelve tres garantías fundamentales que antes dábamos por sentadas:
 
-Son tres garantías disueltas:
+**Primero:** La red física ya no es una barrera. En la nube, cada solicitud de acceso debe ser verificada de manera individual utilizando políticas basadas en el contexto del usuario.
 
-**Una:** el perímetro lógico se disuelve. La red ya no protege. Cada
-solicitud tiene que verificarse sola con políticas contextuales.
+**Segundo:** Las identidades no pueden depender de credenciales estáticas. En la versión 1, los microservicios compartían claves persistentes en archivos de configuración; **un riesgo de filtración permanente** que en la versión 2 resulta inaceptable.
 
-**Dos:** las identidades con claves estáticas. Los microservicios
-usaban credenciales persistentes en archivos. **Eso es un vector
-permanente de filtración.**
+**Tercero:** El cumplimiento legal se vuelve más estricto. La reforma constitucional mexicana de 2025 establece obligaciones específicas de protección de datos aplicables de manera explícita al cómputo en la nube.
 
-**Tres:** la conformidad legal se reconfigura. La reforma
-constitucional mexicana de 2025 extendió las obligaciones de
-protección de datos explícitamente al cómputo en la nube.
+Nuestro esquema preventivo ataca estos tres frentes de manera integrada, garantizando que el paso a la nube sea seguro y cumpla plenamente con la normativa.
 
-> *[ritmo pausado · contacto visual]*
+> *[Mirada hacia Carlos]*
 
-Nuestro trabajo terminal aborda estos tres problemas de forma
-integrada. No resolvemos solo uno — los tres simultáneamente.
-
-**Carlos**, te paso la palabra para el objetivo general.
+**Carlos**, te cedo la palabra para detallar el objetivo general.
 
 ---
 
 ## Slide 13 — Métrica F-beta · 40s
 
-> *[Después de slide 12 de Miguel]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 12]*
 
-Gracias, Miguel. Algo muy específico: la métrica del clasificador.
+Gracias, Miguel. Un componente técnico de vital importancia es la métrica de rendimiento que seleccionamos para evaluar nuestro clasificador de datos personales.
 
-Usamos **F-beta con beta igual a 2**. Viene de Microsoft Presidio y
-Purview, que son la referencia en clasificación de PII.
+Adoptamos la métrica **F-beta con un valor de beta igual a 2** `[LECTURA: efe-beta con beta igual a dos]`. Esta es la métrica de referencia utilizada por herramientas líderes en la industria como *Microsoft Presidio*.
 
-> *[ritmo pausado]*
+> *[Ritmo lento · Énfasis en la lógica]*
 
-¿Qué significa en la práctica? **Le damos el doble de importancia al
-recall que a la precisión.**
+En términos prácticos, esto significa que **le otorgamos el doble de importancia a la exhaustividad o recall `[LECTURA: ri-col]`, por encima de la precisión**. 
 
-La lógica es directa: en privacidad, un falso negativo cuesta mucho
-más que un falso positivo. Si decimos "este documento no tiene datos
-sensibles" y sí los tiene, eso termina en una exposición. En cambio,
-si decimos que sí los tiene y resulta que no, lo peor es que un
-Analista revisa un documento de más.
+La lógica en materia de privacidad es muy clara: un falso negativo es catastrófico, pues significaría dejar pasar un dato sensible sin anonimizar, exponiendo la privacidad del titular. En cambio, un falso positivo únicamente implica que un analista revisará manualmente un documento adicional. 
 
-Esta métrica queda como criterio del RNF-10 para las pruebas de TT2.
+Esta métrica constituye el criterio de aceptación principal para las pruebas que realizaremos en la segunda fase del proyecto.
 
 ---
 
 ## Slide 14 — Por qué GCP · 50s
 
-> *[Continuación]*
+> *[Ritmo seguro · Explicación analítica]*
 
-La elección de la plataforma no fue arbitraria. Hicimos comparativa
-técnica contra los tres grandes — AWS, Azure y Google Cloud — con
-cinco criterios derivados de los objetivos particulares.
+La selección de la nube de Google no fue una decisión casual. Realizamos una evaluación comparativa exhaustiva frente a los servicios de Amazon y Azure utilizando cinco criterios técnicos alineados con los objetivos de PICIS v2.
 
-Voy a resumir donde GCP gana:
+Destaco las tres áreas donde Google Cloud sobresale de forma definitiva:
 
-**Zero Trust nativo:** AWS Verified Access, Azure Entra Private Access,
-GCP **Identity-Aware Proxy más Access Context Manager**. La solución
-más madura para verificar identidad en cada solicitud.
+**Uno:** El control de acceso Zero Trust. A través de IAP `[LECTURA: i-a-pe]` y políticas de contexto, logramos verificar la identidad del usuario en cada solicitud antes de otorgar acceso a la red privada.
 
-**Federación sin claves:** GCP **Workload Identity Federation**, basada
-en el estándar RFC 8693. AWS y Azure tienen alternativas parciales.
+**Dos:** La federación de identidades sin llaves con *Workload Identity Federation* `[LECTURA: guork-lod ai-dentiti feder-eishon]`. Esto nos permite comunicar los microservicios sin almacenar contraseñas ni archivos de clave en el clúster.
 
-**Clasificación NLP nativa:** GCP **Sensitive Data Protection**
-integrado con DLP. Macie de AWS está limitado a S3.
+**Tres:** La clasificación nativa de datos a través del servicio de *Sensitive Data Protection* `[LECTURA: sensitiv data protec-shon]`, el cual está plenamente integrado con los repositorios de datos del ecosistema.
 
-Los detalles de CMEK y WORM están en el reporte. La conclusión: para
-una carga NLP institucional bajo Zero Trust, GCP gana en integración
-de los cinco criterios.
+En conclusión: Google Cloud ofrece el ecosistema mejor integrado para desplegar la arquitectura modular de PICIS.
 
-**Carlos**, sigues con la metodología.
+> *[Mirada hacia Carlos]*
+
+**Carlos**, continuamos con la metodología.
 
 ---
 
-## Slide 17 — Requisitos · 45s
+## Slide 17 — Requisitos · 40s
 
-> *[Después de slide 16 de Miguel]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 16]*
 
-De la brecha que acaba de mostrar Miguel, derivamos los requisitos:
-**12 funcionales y 10 no funcionales**, todos con criterio de
-aceptación medible.
+Derivado del análisis de brechas que acaba de exponer Miguel, estructuramos un catálogo de **12 requisitos funcionales y 10 no funcionales**, cada uno con criterios de aceptación cuantitativos y medibles.
 
-> *[contacto visual]*
+> *[Lectura fluida · No leas la lista del slide, enfócate en los pilares]*
 
-No son requisitos vagos. Cada uno tiene una condición verificable y
-trazabilidad explícita al objetivo particular y al control que lo
-materializa.
+En lugar de enumerar el catálogo completo, quiero destacar los dos pilares de diseño que sustentan el proyecto:
 
-Los más representativos: **RF-04**, acceso Zero Trust por contexto.
-**RF-07**, logs inmutables en bucket WORM. **RF-12**, trazabilidad de
-las decisiones de IA.
+En el ámbito **funcional**, resalto el requisito de inmutabilidad de los registros. Todo registro de acceso y auditoría se escribe en buckets configurados con retención de datos inmutable, garantizando la trazabilidad exigida por la ley.
 
-En no funcionales: **RNF-08**, aprovisionamiento declarativo
-reproducible — todo el entorno se levanta con scripts. **RNF-10**,
-verificabilidad de pruebas — cada caso debe ser reproducible con
-evidencia de ejecución.
+En el ámbito **no funcional**, nuestro pilar es el aprovisionamiento declarativo. La infraestructura no se configura manualmente en una consola; se define por completo a través de código reproducible, eliminando errores de configuración humana.
 
-El catálogo completo está en el Anexo A.
+El catálogo técnico detallado puede ser consultado en el Anexo A del reporte.
 
 ---
 
-## Slide 19 — Contenedores · 60s
+## Slide 19 — C4 Nivel 2 · Contenedores · 55s
 
-> *[Continuación]*
+> *[Pausa breve · Señalar el diagrama C4 en la diapositiva]*
 
-Bajamos un nivel en la arquitectura. **Cinco planos lógicos** sobre
-GCP.
+Este es el diagrama de contenedores de PICIS v2, el cual estructura la arquitectura en la nube mediante **cinco planos lógicos** interconectados:
 
-> *[señalar diagrama]*
+**El Plano de Ingreso:** Donde el balanceador de carga colabora con IAP `[LECTURA: i-a-pe]` para firmar un token de identidad y validar el contexto antes de que el tráfico toque la red interna.
 
-**Plano uno, ingreso:** Cloud Load Balancing, Identity-Aware Proxy,
-Access Context Manager. IAP firma un JWT y pasa al siguiente plano.
+**El Plano de Aplicación:** Ubicado en un clúster privado de GKE `[LECTURA: ge-ka-e]`, donde residen de forma aislada el recolector de documentos y el clasificador de texto, interactuando sin contraseñas gracias a las identidades federadas.
 
-**Plano dos, aplicación:** GKE privado con Workload Identity. Aquí
-viven el scraper, el clasificador NLP/IA, y el reportador. Con SDP
-como insumo opcional.
+**El Plano de Datos:** Que vive protegido dentro de un perímetro lógico cerrado mediante *VPC Service Controls* `[LECTURA: vupese-servis-controls]` para evitar fugas de información, almacenando los datos cifrados con llaves gestionadas por la institución.
 
-**Plano tres, datos:** dentro de un perímetro VPC Service Controls.
-BigQuery con CMEK y data masking, Cloud Storage cifrado.
-
-Debajo, dos planos transversales que **sostienen a los demás**:
-
-**Plano cuatro, control:** Cloud Identity, IAM, KMS, Secret Manager,
-Audit Logs en WORM, VPC SC.
-
-**Plano cinco, cadena de software:** Cosign firma las imágenes,
-Artifact Registry las versiona, Binary Authorization exige atestación
-antes del despliegue.
-
-> *[intensificar]*
-
-Ningún componente funciona aislado. Eso hace que el esquema sea
-coherente, no una colección de herramientas sueltas.
-
-**Miguel**, ahora muestras el flujo Zero Trust completo.
+Finalmente, los planos transversales de **Control** y de **Ciclo de Vida de Software** garantizan que solo imágenes de contenedores firmadas y verificadas puedan ser desplegadas en el entorno de producción.
 
 ---
 
-## Slide 21 — Clasificador NLP/IA · 50s
+## Slide 21 — Diseño · Clasificador NLP/IA · 50s
 
-> *[Después de slide 20 de Miguel]*
+> *[Señalar el diagrama del pipeline]*
 
-Bajamos un nivel más. Adentro del clasificador, el componente más
-sensible porque toca los datos personales directamente.
+Descendemos un nivel más en la arquitectura para analizar el clasificador, que es el componente que interactúa de forma directa con los datos sensibles.
 
-Es un pipeline de **cinco pasos** en GKE privado: separador de
-metadatos, segmentador, filtrado, el **núcleo** — el clasificador
-NLP/IA con la taxonomía de 55 tipos — y el reportador, que produce el
-JSON final con referencia archivo · página · párrafo.
+Este módulo opera en un pipeline `[LECTURA: paip-lain]` de procesamiento modular dentro del clúster privado de GKE `[LECTURA: ge-ka-e]`. Su función es procesar el texto y clasificarlo bajo nuestra taxonomía propietaria de 55 tipos de datos personales.
 
-> *[contacto visual · intensificar]*
+> *[Contacto visual directo con el jurado · Ritmo pausado y formal · Muy Importante]*
 
-Algo crítico: el clasificador **dialoga** con Sensitive Data Protection.
-SDP es un **insumo**, no el veredicto. La taxonomía propia de PICIS es
-la que decide. Y la decisión final no es automática: **el Analista
-valida** los hallazgos antes de persistirlos como incidentes
-confirmados. Toda esa trazabilidad queda en Cloud Logging.
+Quiero enfatizar que este diseño responde estrictamente al **Artículo 22 de la Ley de Datos Personales (LGPDPPSO)**. Nuestro sistema no toma decisiones automatizadas autónomas que afecten los derechos del usuario. El clasificador genera una preclasificación y es el **Analista humano** quien valida y confirma los incidentes en la consola de control. Toda la trazabilidad de esta interacción se registra en registros de auditoría inmutables.
 
-Eso es lo que cumple el artículo 22 a nivel de implementación.
+> *[Mirada hacia Carlos]*
 
-**Carlos**, sigues con el catálogo de controles.
+**Carlos**, pasamos al catálogo de controles.
 
 ---
 
-## Slide 24 — Conclusiones · 50s
+## Slide 24 — Conclusiones · 45s
 
-> *[Después de slide 23 de Miguel]*
+> *[Transición: Entras después de la intervención de Miguel en el slide 23]*
 
-Resultados. **De los cuatro objetivos particulares, tres se cumplieron
-en TT1.**
+Como resultados y conclusiones de esta primera etapa, hemos completado con éxito **tres de los cuatro objetivos particulares de nuestro Trabajo Terminal**:
 
-**OP-1, brecha caracterizada:** cada activo trazado a control existente
-y control objetivo. Matriz en el Anexo I.
+**Primero (OP-1):** Caracterizamos la brecha de seguridad mediante una matriz detallada que asocia cada activo crítico con sus controles existentes y objetivos.
 
-**OP-2, 22 controles diseñados:** agrupados en confidencialidad,
-integridad y privacidad. Todos mapeados a subcategorías del NIST CSF
-2.0 aplicables.
+**Segundo (OP-2):** Diseñamos un catálogo de 22 controles técnicos clasificados en confidencialidad, integridad y privacidad, mapeados al marco NIST CSF 2.0 `[LECTURA: nist-ese-ese-efe dos punto cero]`.
 
-**OP-3, trazabilidad normativa:** mapeo bidireccional artículo ↔ control
-sobre LFPDPPP, su Reglamento y la LGPDPPSO. Anexo E.
+**Tercero (OP-3):** Diseñamos la conformidad legal a través de una matriz de trazabilidad bidireccional entre la normativa mexicana y los controles técnicos implementados.
 
-Más el PIA del clasificador en siete bloques, con decisión residual
-documentada.
+> *[Énfasis final con seguridad]*
 
-> *[intensificar · contacto visual]*
-
-El resultado más significativo es el **mapeo bidireccional**. Dado
-cualquier control, sabes qué artículo lo exige. Dado cualquier
-artículo, sabes qué control lo satisface. Trazabilidad en ambas
-direcciones.
+La aportación principal de este diseño es su **trazabilidad bidireccional**: ante cualquier auditoría, podemos demostrar qué artículo de la ley exige un control técnico y, a su vez, qué control específico en la nube satisface cada obligación de ley.
 
 **Carlos**, cierras con el trabajo a futuro.
 
 ---
 
-## Slide 26 — Gracias · cierre conjunto
+## Slide 26 — Gracias · Cierre conjunto
 
-> *[Junto a Miguel y Carlos]*
+> *[Te incorporas al centro junto con Miguel y Carlos, listos para la sesión de preguntas]*
 
-Estamos listos para sus preguntas.
+Estamos listos para sus preguntas. Muchas gracias.
 
 ---
 
-## Notas de coaching para Diego
+## Notas de entrega para Diego (Lee antes de iniciar)
 
-1. **Tu fuerza es la precisión.** Cuando dices "tokens de máximo una
-   hora", el público debe sentir que sabes exactamente cómo funciona.
-2. **No leas enumeraciones.** Lista 3 ejemplos representativos y deja
-   el resto al reporte / Anexo. El público no recuerda C-001 vs C-002,
-   pero sí recuerda "claves estáticas son un vector permanente de
-   filtración".
-3. **En el slide 21, el remate es el artículo 22.** Es donde lo técnico
-   se encuentra con la ley. Dale peso. No lo digas de pasada.
-4. **Si un sinodal te pregunta algo técnico**, responde con precisión y
-   brevedad. Si no sabes algo, di "eso está en el Anexo X" o "eso es
-   parte de TT2". **Nunca inventes.**
+1. **La pronunciación es tu aliada:** Di las siglas letra por letra despacio (`I-A-P`, `G-K-E`). Suena mucho más natural y evita tropiezos que decirlas en inglés rápido.
+2. **Usa el guion en pantalla:** Dado que puedes leer el guion directamente en tu pantalla, úsalo para mantener la calma. No intentes improvisar sobre los nombres de los servicios de GCP.
+3. **El remate del Slide 21 es clave:** Los sinodales de ESCOM aman la justificación legal. Cuando hables del *Artículo 22* y la *validación humana*, haz una pausa y míralos a los ojos. Es el punto más fuerte de tu presentación.
