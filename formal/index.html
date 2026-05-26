@@ -3479,6 +3479,48 @@
       </div>
     </section>
 
+    <!-- ============================================================
+         27 — REHEARSAL SUMMARY (oculto en presentación real,
+              visible al avanzar después del slide 26 durante ensayos)
+         ============================================================ -->
+    <section class="slide rehearsal" data-slide="27">
+      <div class="slide-frame">
+        <span class="brand"><strong>PICIS</strong> · TT 2026-B182</span>
+        <span class="count" style="color: var(--accent);">REHEARSAL</span>
+      </div>
+      <div class="slide-content">
+        <div class="reveal eyebrow">Rehearsal · resumen de tiempos</div>
+        <h2 class="slide-title reveal" style="display: block; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--ink-1);">
+          Tiempo por diapositiva — <span style="color: var(--accent);" id="rehearsal-total">--:--</span>
+        </h2>
+        <div class="slide-rule" aria-hidden="true"></div>
+
+        <div class="reveal" style="margin-top: 0.6rem; overflow: auto; max-height: 62vh;">
+          <table class="data" id="rehearsal-table" style="font-size: 0.82rem;">
+            <thead>
+              <tr>
+                <th style="width: 3.5rem;">#</th>
+                <th>Sección</th>
+                <th style="width: 8rem;">Expositor</th>
+                <th style="width: 7rem; text-align: right;">Tiempo</th>
+                <th style="width: 5rem; text-align: right;">Objetivo</th>
+                <th style="width: 5rem; text-align: right;">Δ</th>
+              </tr>
+            </thead>
+            <tbody id="rehearsal-tbody"></tbody>
+          </table>
+        </div>
+
+        <p class="ref reveal" style="margin-top: 1rem;">
+          Objetivo total: <strong>20 min</strong> · Tecla <code>R</code> para reiniciar el cronómetro · Los tiempos se guardan en este navegador.
+        </p>
+      </div>
+      <div class="slide-foot">
+        <span class="inst">ESCOM · IPN</span>
+        <span>Rehearsal · no se muestra en defensa real</span>
+      </div>
+    </section>
+
     <script>
       /* ===========================================
          SLIDE PRESENTATION CONTROLLER
@@ -3493,12 +3535,153 @@
           this.current = 0;
           this.progressBar = document.getElementById("progressBar");
 
+          // --- Rehearsal timer ---------------------------------------------
+          // Tracks tiempo en cada slide para que al llegar a la slide 27
+          // (rehearsal-summary) se muestre un desglose por diapositiva.
+          // Persiste en localStorage para sobrevivir recargas.
+          this.rehearsal = this.loadRehearsal();
+          this.lastEnteredAt = performance.now();
+          this.lastSlideIndex = -1;
+
           this.setupIntersectionObserver();
           this.setupKeyboardNav();
           this.setupTouchNav();
           this.setupDiagramZoom();
           this.updateProgress();
           this.scrollToCurrent(true);
+        }
+
+        // ---------- Rehearsal persistence ------------------------------------
+        loadRehearsal() {
+          try {
+            const raw = localStorage.getItem("rehearsalTimes");
+            return raw ? JSON.parse(raw) : {};
+          } catch (_e) {
+            return {};
+          }
+        }
+        saveRehearsal() {
+          try {
+            localStorage.setItem("rehearsalTimes", JSON.stringify(this.rehearsal));
+          } catch (_e) {}
+        }
+        resetRehearsal() {
+          this.rehearsal = {};
+          this.lastEnteredAt = performance.now();
+          this.saveRehearsal();
+          if (this.slides[this.current].dataset.slide === "27") {
+            this.renderRehearsalSummary();
+          }
+        }
+
+        // Acumular tiempo del slide que estamos abandonando
+        recordSlideDuration(prevIndex) {
+          if (prevIndex < 0 || prevIndex >= this.slides.length) return;
+          const slide = this.slides[prevIndex];
+          const id = slide.dataset.slide;
+          if (!id || id === "27") return;             // no acumulamos para el resumen
+          const now = performance.now();
+          const dur = (now - this.lastEnteredAt) / 1000;     // segundos
+          this.rehearsal[id] = (this.rehearsal[id] || 0) + dur;
+          this.saveRehearsal();
+          this.lastEnteredAt = now;
+        }
+
+        // ---------- Render rehearsal summary ---------------------------------
+        // Definición declarativa del deck: título corto + expositor + objetivo (s)
+        static REHEARSAL_META = {
+          "01": { title: "Portada",                       owner: "Miguel",         goal: 30 },
+          "02": { title: "Datos sensibles por error",     owner: "Miguel",         goal: 50 },
+          "03": { title: "¿Qué es un dato personal?",     owner: "Carlos",         goal: 45 },
+          "04": { title: "Marco legal · IPN",             owner: "Carlos",         goal: 45 },
+          "05": { title: "Por qué nació PICIS",           owner: "Miguel",         goal: 45 },
+          "06": { title: "De PICIS v1 a v2",              owner: "Diego",          goal: 45 },
+          "07": { title: "Problemática",                  owner: "Diego",          goal: 50 },
+          "08": { title: "Objetivo general",              owner: "Carlos",         goal: 45 },
+          "09": { title: "Objetivos particulares",        owner: "Carlos",         goal: 40 },
+          "10": { title: "Estado del arte",               owner: "Miguel",         goal: 50 },
+          "11": { title: "Cuatro marcos del NIST",        owner: "Carlos",         goal: 45 },
+          "12": { title: "Legislación mexicana",          owner: "Miguel",         goal: 55 },
+          "13": { title: "Métrica F-beta",                owner: "Diego",          goal: 40 },
+          "14": { title: "Por qué GCP",                   owner: "Diego",          goal: 50 },
+          "15": { title: "Metodología",                   owner: "Carlos",         goal: 45 },
+          "16": { title: "Brecha activo a activo",        owner: "Miguel",         goal: 50 },
+          "17": { title: "Requisitos",                    owner: "Diego",          goal: 45 },
+          "18": { title: "C4 nivel 1 · Contexto",         owner: "Carlos",         goal: 50 },
+          "19": { title: "C4 nivel 2 · Contenedores",     owner: "Diego",          goal: 60 },
+          "20": { title: "Flujo Zero Trust · 11 pasos",   owner: "Miguel",         goal: 60 },
+          "21": { title: "C4 nivel 3 · Clasificador",     owner: "Diego",          goal: 50 },
+          "22": { title: "Catálogo · 22 controles",       owner: "Carlos",         goal: 45 },
+          "23": { title: "PIA del clasificador",          owner: "Miguel",         goal: 50 },
+          "24": { title: "Conclusiones",                  owner: "Diego",          goal: 50 },
+          "25": { title: "Trabajo a futuro",              owner: "Carlos",         goal: 40 },
+          "26": { title: "Gracias",                       owner: "Todos",          goal: 20 },
+        };
+
+        static fmtTime(seconds) {
+          if (!seconds || isNaN(seconds)) return "--:--";
+          const m = Math.floor(seconds / 60);
+          const s = Math.round(seconds % 60);
+          return `${m}:${String(s).padStart(2, "0")}`;
+        }
+        static fmtDelta(actual, goal) {
+          if (!actual) return "";
+          const diff = actual - goal;
+          const sign = diff >= 0 ? "+" : "−";
+          return `${sign}${Math.round(Math.abs(diff))}s`;
+        }
+
+        renderRehearsalSummary() {
+          const tbody = document.getElementById("rehearsal-tbody");
+          const totalEl = document.getElementById("rehearsal-total");
+          if (!tbody || !totalEl) return;
+
+          let totalActual = 0;
+          let totalGoal = 0;
+          let html = "";
+
+          for (const [id, meta] of Object.entries(SlidePresentation.REHEARSAL_META)) {
+            const actual = this.rehearsal[id] || 0;
+            const diffStr = SlidePresentation.fmtDelta(actual, meta.goal);
+            const overUnder = actual === 0
+              ? "color: var(--ink-mute);"
+              : actual > meta.goal * 1.2
+              ? "color: var(--accent); font-weight: 600;"
+              : actual < meta.goal * 0.6 && actual > 0
+              ? "color: var(--ink-mute); font-style: italic;"
+              : "color: var(--ink-1);";
+            const ownerColor =
+              meta.owner === "Miguel" ? "#1b4079"
+              : meta.owner === "Diego" ? "#c97b22"
+              : meta.owner === "Carlos" ? "#13315c"
+              : "#64748b";
+            totalActual += actual;
+            totalGoal += meta.goal;
+            html += `
+              <tr>
+                <td style="font-family: var(--font-mono); color: var(--accent);">${id}</td>
+                <td>${meta.title}</td>
+                <td style="color: ${ownerColor}; font-weight: 500;">${meta.owner}</td>
+                <td style="text-align: right; font-family: var(--font-mono); ${overUnder}">${SlidePresentation.fmtTime(actual)}</td>
+                <td style="text-align: right; font-family: var(--font-mono); color: var(--ink-mute);">${SlidePresentation.fmtTime(meta.goal)}</td>
+                <td style="text-align: right; font-family: var(--font-mono); ${overUnder}">${diffStr}</td>
+              </tr>`;
+          }
+
+          // Fila total
+          const totalDiff = SlidePresentation.fmtDelta(totalActual, totalGoal);
+          html += `
+            <tr style="background: var(--paper-2); border-top: 2px solid var(--accent);">
+              <td></td>
+              <td style="font-weight: 600; color: var(--ink-1);">TOTAL</td>
+              <td></td>
+              <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--ink-1);">${SlidePresentation.fmtTime(totalActual)}</td>
+              <td style="text-align: right; font-family: var(--font-mono); color: var(--ink-mute);">${SlidePresentation.fmtTime(totalGoal)}</td>
+              <td style="text-align: right; font-family: var(--font-mono); font-weight: 600; color: var(--accent);">${totalDiff}</td>
+            </tr>`;
+
+          tbody.innerHTML = html;
+          totalEl.textContent = SlidePresentation.fmtTime(totalActual);
         }
 
         /* Click sobre cualquier .c4-board o .zt-flow abre el diagrama en
@@ -3555,13 +3738,22 @@
         setupIntersectionObserver() {
           // El IntersectionObserver añade .visible cuando un slide entra en
           // viewport. Esto dispara las animaciones CSS .reveal y la barra
-          // ámbar del subtítulo.
+          // ámbar del subtítulo. También dispara el cronómetro de rehearsal.
           const observer = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
                 if (entry.intersectionRatio > 0.5) {
                   entry.target.classList.add("visible");
-                  this.current = this.slides.indexOf(entry.target);
+                  const newIndex = this.slides.indexOf(entry.target);
+                  if (newIndex !== this.lastSlideIndex) {
+                    this.recordSlideDuration(this.lastSlideIndex);
+                    this.lastSlideIndex = newIndex;
+                    // Al entrar al resumen, render fresco
+                    if (entry.target.dataset.slide === "27") {
+                      this.renderRehearsalSummary();
+                    }
+                  }
+                  this.current = newIndex;
                   this.updateProgress();
                 }
               });
@@ -3636,6 +3828,15 @@
                     const active = this.slides[this.current];
                     const diag = active.querySelector(".c4-board, .zt-flow");
                     if (diag) this.openDiagramZoom(diag);
+                  }
+                }
+                break;
+              case "r":
+              case "R":
+                if (!e.metaKey && !e.ctrlKey && e.shiftKey) {
+                  e.preventDefault();
+                  if (confirm("¿Reiniciar el cronómetro de rehearsal?")) {
+                    this.resetRehearsal();
                   }
                 }
                 break;
